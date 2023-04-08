@@ -1,0 +1,14 @@
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: url(./Images\ and\ Videos/parchment_seamless)
+}
+
+.section {
+    margin: 1rem;
+    padding: 3rem 5rem;
+}
