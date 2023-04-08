@@ -5,10 +5,38 @@
 }
 
 body {
-    background: url(./Images\ and\ Videos/)
+    background: url(./Assets/parchment_seamless.jpg) repeat;
+    font-family: 'Crimson Pro', serif;
 }
 
+button {font-family: inherit; all: unset;}
+
+.hidden {
+    opacity: 0; 
+    transition: all 1s ease;
+}
+.show {opacity: 1}
+
 .section {
-    margin: 1rem;
+    margin: 1rem auto;
     padding: 3rem 5rem;
+    max-width: 70rem;
+}
+
+.title-section {
+    display: grid;
+    place-items: center;
+    gap: 5em;
+}
+
+.intro {
+    font-size: 1.75rem;
+    width: 100%;
+}
+.show-more {
+
+}
+
+.logo {
+    width: clamp(30vw, 40vw, 40rem);
 }
