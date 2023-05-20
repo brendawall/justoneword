@@ -24,19 +24,28 @@ button {font-family: inherit; all: unset;}
 }
 
 .title-section {
+    margin: auto;
+}
+
+.logo-container {
     display: grid;
     place-items: center;
     gap: 5em;
 }
 
-.intro {
-    font-size: 1.75rem;
-    width: 100%;
-}
-.show-more {
-
+.ink-overlay {
+    grid-area: 1 / 1;
+    height: 100%;
+    mix-blend-mode: darken;
 }
 
 .logo {
     width: clamp(30vw, 40vw, 40rem);
+    grid-area: 1 / 1;
+    -webkit-mask: url(./ink-overlays/Logo/Logo1/Image\ Sequence/0001.png);
+}
+
+.intro {
+    font-size: 1.75rem;
+    width: 100%;
 }
