@@ -7,6 +7,7 @@
 body {
     background: url(./Assets/parchment_seamless.jpg) repeat;
     font-family: 'Crimson Pro', serif;
+    overflow-x: hidden;
 }
 
 button {font-family: inherit; all: unset;}
@@ -33,16 +34,19 @@ button {font-family: inherit; all: unset;}
     gap: 5em;
 }
 
-.ink-overlay {
-    grid-area: 1 / 1;
-    height: 100%;
-    mix-blend-mode: darken;
-}
-
 .logo {
-    width: clamp(30vw, 40vw, 40rem);
-    grid-area: 1 / 1;
-    -webkit-mask: url(./ink-overlays/Logo/Logo1/Image\ Sequence/0001.png);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 120vh;
+    width: 100vw;
+    mix-blend-mode: darken;
+    -webkit-mask-image: url(./icons/logo.png);
+    mask-image: url(./icons/logo.png);
+    -webkit-mask-size: 40% 50%;
+    -webkit-mask-position: center center;
+    -webkit-mask-repeat: no-repeat;
 }
 
 .intro {
