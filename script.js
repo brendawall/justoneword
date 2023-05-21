@@ -48,8 +48,18 @@ setTimeout(() => {
   const paragraph = document.querySelector('p');
   const skipButton = document.querySelector('.skip')
   
-  typeWriter(paragraph, 5, 200, 10)
+  typeWriter(paragraph, 5, 50, 10)
 
+const wordSection = document.querySelector('words');
+
+function readTextFile(filePath) {
+	fetch(filePath)
+	  .then(response => response.text())
+	  .then(fileContent => console.log(fileContent))
+  }
+  
+  // Example usage
+  readTextFile('./word-text-form/word.txt');
 
   
   
