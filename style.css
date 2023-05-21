@@ -19,49 +19,45 @@ button {font-family: inherit;}
 .show {opacity: 1}
 
 .section {
-    margin: 1rem auto;
-    padding: 3rem 5rem;
-    max-width: 70rem;
+    display: grid;
+    place-items: center;
+    margin: 1rem;
+    padding-inline: 5rem;
 }
 
+.min-width {padding-inline: 10vw;}
+
 .logo {
-    margin: auto;
-    position: relative;
-    width: 50vw;
-    aspect-ratio: 16 / 9;
+    width: 40vw;
+    height: 40vw;
+    object-fit: cover;
+    background: black;
     mix-blend-mode: darken;
     -webkit-mask-image: url(./icons/logo.png);
     mask-image: url(./icons/logo.png);
 
-    mask-size: 40% 50%;
+    mask-size: contain;
     mask-position: center center;
     mask-repeat: no-repeat;
 
-    -webkit-mask-size: 40% 50%;
+    -webkit-mask-size: contain;
     -webkit-mask-position: center center;
     -webkit-mask-repeat: no-repeat;
 }
 
-.skip {
-    background: transparent;
-    border: none;
-    margin-block: .25rem;
-    font-style: italic;
-    font-weight: 200;
-    font-size: 1.35rem;
-    opacity: 0.6;
-    cursor: pointer;
-    border-bottom: 1px solid black;
-    transition: opacity 200ms ease;
+.logo.animation-end {
+    animation: forwards fade-to-black 3s ease;
 }
 
-.skip:hover {opacity: 1;}
-.skip.skipping {animation: skip-blink 500ms infinite ease;}
-
-@keyframes skip-blink {
-    0%{opacity: 0.6;}
-    50%{opacity: 1;}
-    100%{opacity: 0.6;}
+@keyframes fade-to-black {
+    0% {
+        -webkit-filter: brightness(1);
+        filter: brightness(1);
+    }
+    100% {
+        -webkit-filter: brightness(0);
+        filter: brightness(0);
+    }
 }
 
 .intro {
