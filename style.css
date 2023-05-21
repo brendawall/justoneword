@@ -49,6 +49,38 @@ button {font-family: inherit;}
     animation: forwards fade-to-black 3s ease;
 }
 
+section.words {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.word {
+    height: 10rem;
+    padding: 2rem;
+    position: relative;
+    display: grid;
+    align-items: center;
+    object-fit: cover;
+    border: none;
+    background: transparent;
+}
+
+.word > * {
+    grid-area: 1 / 1;
+}
+
+.word > h2 {
+    font-size: 2rem;
+    font-family: 'Wix Madefor Display', sans-serif;
+    font-weight: 900;
+}
+
+.word > video {
+    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+}
+
 @keyframes fade-to-black {
     0% {
         -webkit-filter: brightness(1);
