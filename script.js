@@ -101,7 +101,7 @@ wordArray.forEach(word => {
 	let wordText = document.createElement("h2");
 	wordText.textContent = word.word;
 	let wordBackground = document.createElement("video")
-	let randomBackground = Math.floor(Math.random() * 6) + 1;
+	let randomBackground = Math.floor(Math.random() * 5) + 1;
 
 	wordBackground.src = `./Ink-overlays/on-hover/hov${randomBackground}/on-hover_${randomBackground}.mov`
 	wordBackground.preload = true;
@@ -111,8 +111,6 @@ wordArray.forEach(word => {
 	wordBackground.pause();
 	wordBackground.style.mixBlendMode = 'darken'
 
-	if(randomBackground == 5) {wordBackground.style.filter = 'invert()'}
-
 	wordButton.appendChild(wordBackground);
 	wordButton.appendChild(wordText);
 
@@ -121,6 +119,7 @@ wordArray.forEach(word => {
 
 	wordButton.addEventListener("mouseover", () => {
 		wordBackground.play();
+		wordButton.classList.add('hover')
 	})
 });
 
