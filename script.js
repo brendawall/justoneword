@@ -41,12 +41,20 @@ function formatNumber(number, length) {
   
 	function startAnimation() {
 	  let delay = frameDelay; // Initial delay duration
+	  let zoomLength = 10;
   
 	  sequenceArray.forEach(sequence => {
 		for (let i = 1; i <= sequence.length; i++) {
 			setTimeout(() => {
+			  if(sequence.inverted) {containerElement.style.filter = 'invert()'}
 			  containerElement.style.background = `url(${sequence.path}/${formatNumber(i, 4)}) no-repeat center`;
-			  containerElement.style.backgroundSize = `156%`;
+			  if(sequence.center) {
+				if(i <= zoomLength) {
+					containerElement.style.backgroundSize = `${i * (156 / zoomLength)}%`
+				} else {
+				containerElement.style.backgroundSize = `156%`;
+				};	
+			  }	  
 			}, delay);
   
 			delay += frameDelay; // Increment the delay for each frame
@@ -58,13 +66,44 @@ function formatNumber(number, length) {
   // Example usage
   const logoContainer = document.querySelector('.logo');
   const sequenceArray = [
-	{ type: 'logo', path: './ink-overlays/logo/Logo1/image-sequence', length: 297 }
+	{ type: 'logo', path: './ink-overlays/logo/Logo1/image-sequence', length: 297, inverted: false, center: true }
   ];
-  const frameDelay = 50;
+  const frameDelay = 40;
   
   animateVideoSequence(logoContainer, sequenceArray, frameDelay);
   
+  function typeWriter(text, speed, pause, random) {
+	const originalText = text.textContent;
+	const modifiedText = originalText.split('');
+	const randomSpeedArray = [];
+	const pauseArray = ['.','!','?',',']
+	let sum = 0;
+	
+	text.textContent = ''
+
+	for(let n = 0; n<modifiedText.length; n++) {
+		if(pauseArray.includes(modifiedText[n])) {
+			let randomSpeedItem = Math.floor(Math.random() * random * speed + pause);
+			sum += randomSpeedItem;
+			randomSpeedArray.push(sum)
+		} else {
+			let randomSpeedItem = Math.floor(Math.random() * random * speed);
+			sum += randomSpeedItem;
+			randomSpeedArray.push(sum)
+		}
+
+		setTimeout(() => {
+			text.textContent += modifiedText[n]
+		}, randomSpeedArray[n-1]);		
+	}
+  }
+
+  const paragraph = document.querySelector('p');
+  const skipButton = document.querySelector('.skip')
   
+  typeWriter(paragraph, 5, 200, 10)
+
+
   
   
   

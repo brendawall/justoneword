@@ -10,7 +10,7 @@ body {
     overflow-x: hidden;
 }
 
-button {font-family: inherit; all: unset;}
+button {font-family: inherit;}
 
 .hidden {
     opacity: 0; 
@@ -24,32 +24,47 @@ button {font-family: inherit; all: unset;}
     max-width: 70rem;
 }
 
-.title-section {
-    margin: auto;
-}
-
-.logo-container {
-    display: grid;
-    place-items: center;
-    gap: 5em;
-}
-
 .logo {
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 120vh;
-    width: 100vw;
+    margin: auto;
+    position: relative;
+    width: 50vw;
+    aspect-ratio: 16 / 9;
     mix-blend-mode: darken;
     -webkit-mask-image: url(./icons/logo.png);
     mask-image: url(./icons/logo.png);
+
+    mask-size: 40% 50%;
+    mask-position: center center;
+    mask-repeat: no-repeat;
+
     -webkit-mask-size: 40% 50%;
     -webkit-mask-position: center center;
     -webkit-mask-repeat: no-repeat;
 }
 
+.skip {
+    background: transparent;
+    border: none;
+    margin-block: .25rem;
+    font-style: italic;
+    font-weight: 200;
+    font-size: 1.35rem;
+    opacity: 0.6;
+    cursor: pointer;
+    border-bottom: 1px solid black;
+    transition: opacity 200ms ease;
+}
+
+.skip:hover {opacity: 1;}
+.skip.skipping {animation: skip-blink 500ms infinite ease;}
+
+@keyframes skip-blink {
+    0%{opacity: 0.6;}
+    50%{opacity: 1;}
+    100%{opacity: 0.6;}
+}
+
 .intro {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     width: 100%;
 }
