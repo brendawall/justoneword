@@ -117,9 +117,21 @@ wordArray.forEach(word => {
 	wordButton.classList.add('word')
 	wordSection.appendChild(wordButton);
 
-	wordButton.addEventListener("mouseover", () => {
+	wordButton.addEventListener("mouseenter", () => {
+		wordBackground.playbackRate = 3;
 		wordBackground.play();
 		wordButton.classList.add('hover')
+	})
+	wordButton.addEventListener("mouseleave", () => {
+		let backgroundTiming = wordBackground.currentTime;
+		let reverseTiming = wordBackground.duration - backgroundTiming;
+
+		wordBackground.pause();
+		wordBackground.src = `./Ink-overlays/on-hover/hov${randomBackground}/on-hover_${randomBackground}_reversed.mov`
+		wordBackground.currentTime = reverseTiming;
+		wordBackground.load();
+		wordBackground.playbackRate = 3;
+		wordBackground.play();
 	})
 });
 
