@@ -16,11 +16,11 @@ logo.playbackRate = 2;
 setTimeout(() => {
 	logo.classList.add('animation-end')
 }, 4000);
-  
-  function typeWriter(text, speed, pause, random) {
+
+function typeWriter(text, speed, pause, random) {
 	const originalText = text.textContent;
 	const modifiedText = originalText.split('');
-	const randomSpeedArray = [];
+	var randomSpeedArray = [];
 	const pauseArray = ['.','!','?',',']
 	let sum = 0;
 	
@@ -37,13 +37,14 @@ setTimeout(() => {
 				sum += randomSpeedItem;
 				randomSpeedArray.push(sum)
 			}
-	
+			
 			setTimeout(() => {
 				text.textContent += modifiedText[n]
 			}, randomSpeedArray[n-1]);		
+
 		}
 	}, 5000);
-  }
+}
 
   const paragraph = document.querySelector('p');
   const skipButton = document.querySelector('.skip')
@@ -91,51 +92,69 @@ function readTextFile(filePath) {
 	fetch(filePath)
 	  .then(response => response.text())
 	  .then(fileContent => console.log(fileContent))
-  }
-  
-wordArray.forEach(word => {
-	let textFileFormat = `./word-text-form/${word.file}.txt`;
-	let audioFileFormat = `./audio-exports/${word.file}.mp3`;
+}
+
+function generateDivs(numberOfDivs, circleRadius, container, rotationSpeed) {
+	var angle = 360 / numberOfDivs; // Angle between each div
+	var rotationAngle = 0; // Initial rotation angle
+
+	for (var i = 0; i < numberOfDivs; i++) {
+	  var div = document.createElement('div');
+	  container.appendChild(div);
+	}
+
+	function animateDivs() {
+	  rotationAngle += rotationSpeed; // Update the rotation angle
+
+	  for (var i = 0; i < numberOfDivs; i++) {
+		var div = container.children[i]; // Get the div element
+		var divAngle = angle * i + rotationAngle; // Calculate the individual div angle
+
+		var x = Math.cos((divAngle) * (Math.PI / 180)) * circleRadius;
+		var y = Math.sin((divAngle) * (Math.PI / 180)) * circleRadius;
+
+		if (div) {
+		  div.style.left = (container.offsetWidth / 2 + x) + 'px';
+		  div.style.top = (container.offsetHeight / 2 + y) + 'px';
+		  div.classList.add('word')
+		}
+	  }
+
+	  requestAnimationFrame(animateDivs); // Call the function again for smooth animation
+	}
+
+	animateDivs(); // Start the animation
+}
+
+const largerSpinner = document.querySelector('section.words > .spin-container-one');
+const smallerSpinner = document.querySelector('section.words > .spin-container-two');
+setTimeout(() => {
+	generateDivs(Math.round(wordArray.length * 0.6), largerSpinner.clientWidth / 2.25, largerSpinner, 0.05)
+	generateDivs(Math.round(wordArray.length * 0.4), smallerSpinner.clientWidth / 4, smallerSpinner, 0.1)
 	
-	let wordButton = document.createElement("button");
-	let wordText = document.createElement("h2");
-	wordText.textContent = word.word;
-	let wordBackground = document.createElement("video")
-	let randomBackground = Math.floor(Math.random() * 5) + 1;
+	function appendRandomWord() {
+		const largerSpinnerItems = document.querySelectorAll('section.words > .spin-container-one > div');
+		const smallerSpinnerItems = document.querySelectorAll('section.words > .spin-container-two > div');
+		const jumbledWords = wordArray.sort((a, b) => 0.5 - Math.random());
+		const spinnerItems = [];
+		console.log(jumbledWords.length, largerSpinnerItems.length + smallerSpinnerItems.length)
+		var spinnerItemsLength = largerSpinnerItems.length + smallerSpinnerItems.length;
+		jumbledWords.forEach(function(word, index) {
+			if (index < largerSpinnerItems.length) {
+				const newWordItem = document.createElement("span");
+				newWordItem.textContent = word.word;
+				largerSpinnerItems[index].appendChild(newWordItem);
+			}
+			else {
+				const newWordItem = document.createElement("span");
+				newWordItem.textContent = word.word;
+				smallerSpinnerItems[index - largerSpinnerItems.length].appendChild(newWordItem);
+			}
+		});
+	}
+	appendRandomWord();
+}, 20000);
 
-	wordBackground.src = `./Ink-overlays/on-hover/hov${randomBackground}/on-hover_${randomBackground}.mov`
-	wordBackground.preload = true;
-	wordBackground.autoplay = true;
-	wordBackground.muted = true;
-	wordBackground.controls = false;
-	wordBackground.pause();
-	wordBackground.style.mixBlendMode = 'darken'
-
-	wordButton.appendChild(wordBackground);
-	wordButton.appendChild(wordText);
-
-	wordButton.classList.add('word')
-	wordSection.appendChild(wordButton);
-
-	wordButton.addEventListener("mouseenter", () => {
-		wordBackground.playbackRate = 3;
-		wordBackground.play();
-		wordButton.classList.add('hover')
-	})
-	wordButton.addEventListener("mouseleave", () => {
-		let backgroundTiming = wordBackground.currentTime;
-		let reverseTiming = wordBackground.duration - backgroundTiming;
-
-		wordBackground.pause();
-		wordBackground.src = `./Ink-overlays/on-hover/hov${randomBackground}/on-hover_${randomBackground}_reversed.mov`
-		wordBackground.currentTime = reverseTiming;
-		wordBackground.load();
-		wordBackground.playbackRate = 3;
-		wordBackground.play();
-	})
-});
-
-  
   
   
   

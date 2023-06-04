@@ -12,6 +12,10 @@ body {
 
 button {font-family: inherit;}
 
+video::-webkit-media-controls {
+    display: none;
+}
+
 .hidden {
     opacity: 0; 
     transition: all 1s ease;
@@ -49,38 +53,48 @@ button {font-family: inherit;}
     animation: forwards fade-to-black 3s ease;
 }
 
+.skip-animation {
+    background: transparent;
+    border: none;
+    border-bottom: 1px black solid;
+    font-size: 1.25rem;
+    font-style: italic;
+    font-weight: 300;
+    align-self: left;
+    cursor: pointer;
+}
+
+.no-center {
+    place-items: start;
+    opacity: 0;
+    animation: forwards dissolve-in 500ms 5s ease;
+}
+
+@keyframes dissolve-in {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
 section.words {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    padding: 0;
+    margin: auto;
+    width: 70vw;
+    height: 70vw;
+}
+
+.spin-container-one, .spin-container-two {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    grid-area: 1/1;
 }
 
 .word {
-    padding: 2rem;
-    display: grid;
-    align-items: center;
-    object-fit: cover;
-    border: none;
-    background: transparent;
+    position: absolute;
+    font-weight: 600;
+    font-size: 1.25rem;
+    transform: translate(-50%, -50%);
 }
-
-.word > * {
-    grid-area: 1 / 1;
-}
-
-.word > h2 {
-    font-size: 2rem;
-    font-family: 'Wix Madefor Display', sans-serif;
-    font-weight: 900;
-    z-index: 1;
-}
-
-.word > video {
-    object-fit: cover;
-    width: 10rem;
-    height: 10rem;
-}
-
-.word.hover > h2 {color: white;}
 
 @keyframes fade-to-black {
     0% {
