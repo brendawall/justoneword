@@ -70,16 +70,11 @@ video::-webkit-media-controls {
     animation: forwards dissolve-in 500ms 5s ease;
 }
 
-@keyframes dissolve-in {
-    0% {opacity: 0;}
-    100% {opacity: 1;}
-}
-
 section.words {
     padding: 0;
     margin: auto;
-    width: 70vw;
-    height: 70vw;
+    width: 50vw;
+    height: 50vw;
 }
 
 .spin-container-one, .spin-container-two {
@@ -93,7 +88,19 @@ section.words {
     position: absolute;
     font-weight: 600;
     font-size: 1.25rem;
+    text-align: center;
     transform: translate(-50%, -50%);
+    opacity: 0;
+    animation: forwards dissolve-in --fade-in-time ease;
+}
+
+.word > span {
+    transition: all 3s ease;
+}
+
+@keyframes dissolve-in {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
 }
 
 @keyframes fade-to-black {

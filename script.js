@@ -15,7 +15,7 @@ const logo = document.querySelector('.logo');
 logo.playbackRate = 2;
 setTimeout(() => {
 	logo.classList.add('animation-end')
-}, 4000);
+}, 0);
 
 function typeWriter(text, speed, pause, random) {
 	const originalText = text.textContent;
@@ -49,7 +49,7 @@ function typeWriter(text, speed, pause, random) {
   const paragraph = document.querySelector('p');
   const skipButton = document.querySelector('.skip')
   
-  typeWriter(paragraph, 5, 50, 10)
+  typeWriter(paragraph, 0, 50, 10)
 
 const wordSection = document.querySelector('section.words');
 const wordArray = [
@@ -130,30 +130,57 @@ const largerSpinner = document.querySelector('section.words > .spin-container-on
 const smallerSpinner = document.querySelector('section.words > .spin-container-two');
 setTimeout(() => {
 	generateDivs(Math.round(wordArray.length * 0.6), largerSpinner.clientWidth / 2.25, largerSpinner, 0.05)
-	generateDivs(Math.round(wordArray.length * 0.4), smallerSpinner.clientWidth / 4, smallerSpinner, 0.1)
+	generateDivs(Math.round(wordArray.length * 0.4), smallerSpinner.clientWidth / 3.7, smallerSpinner, 0.1)
 	
 	function appendRandomWord() {
 		const largerSpinnerItems = document.querySelectorAll('section.words > .spin-container-one > div');
 		const smallerSpinnerItems = document.querySelectorAll('section.words > .spin-container-two > div');
 		const jumbledWords = wordArray.sort((a, b) => 0.5 - Math.random());
 		const spinnerItems = [];
-		console.log(jumbledWords.length, largerSpinnerItems.length + smallerSpinnerItems.length)
 		var spinnerItemsLength = largerSpinnerItems.length + smallerSpinnerItems.length;
 		jumbledWords.forEach(function(word, index) {
 			if (index < largerSpinnerItems.length) {
 				const newWordItem = document.createElement("span");
 				newWordItem.textContent = word.word;
+				newWordItem.style.fontSize = Math.random() / 3 + 1.2 + 'rem'
 				largerSpinnerItems[index].appendChild(newWordItem);
 			}
 			else {
 				const newWordItem = document.createElement("span");
 				newWordItem.textContent = word.word;
+				newWordItem.style.fontSize = Math.random() / 3 + 1.2 + 'rem'
 				smallerSpinnerItems[index - largerSpinnerItems.length].appendChild(newWordItem);
 			}
 		});
 	}
 	appendRandomWord();
-}, 20000);
+}, 0);
+
+function randomFontSize(min, max, span) {
+	let fontSize = Math.random() * (max - min) + min;
+	if(span.textContent.split('').length <= 4) {
+		fontSize += .5;
+	}
+	return fontSize;
+}
+
+function fadeInStagger (speed, itemArray) {
+	const array = document.querySelectorAll(itemArray);
+	array.forEach( function(item, index) {
+		let stagger = (index / 1000) * speed;
+		item.style.setProperty('--fade-in-time', stagger);
+	});
+}
+
+setInterval(() => {
+	const spans = document.querySelectorAll('span');
+	spans.forEach(span => {
+		span.style.fontSize = randomFontSize(1, 1.5, span) + 'rem';
+		span.style.opacity = randomFontSize(0.7, 1, span)
+	});
+}, 3000);
+
+fadeInStagger(1, 'span');
 
   
   
