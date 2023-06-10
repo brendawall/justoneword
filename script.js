@@ -12,10 +12,10 @@ const hiddenElements = document.querySelectorAll('.hidden');
 hiddenElements.forEach((el) => observer.observe(el));
 
 const logo = document.querySelector('.logo');
-logo.playbackRate = 2;
+logo.playbackRate = 4;
 setTimeout(() => {
 	logo.classList.add('animation-end')
-}, 0);
+}, 2000);
 
 function typeWriter(text, speed, pause, random) {
 	const originalText = text.textContent;
@@ -43,13 +43,13 @@ function typeWriter(text, speed, pause, random) {
 			}, randomSpeedArray[n-1]);		
 
 		}
-	}, 5000);
+	}, 2000);
 }
 
   const paragraph = document.querySelector('p');
   const skipButton = document.querySelector('.skip')
   
-  typeWriter(paragraph, 0, 50, 10)
+  typeWriter(paragraph, 5, 50, 10)
 
 const wordSection = document.querySelector('section.words');
 const wordArray = [
@@ -91,7 +91,8 @@ const wordArray = [
 function readTextFile(filePath) {
 	fetch(filePath)
 	  .then(response => response.text())
-	  .then(fileContent => console.log(fileContent))
+	  .then(fileContent => fileContent)
+	  return fileContent;
 }
 
 function generateDivs(numberOfDivs, circleRadius, container, rotationSpeed) {
@@ -110,7 +111,7 @@ function generateDivs(numberOfDivs, circleRadius, container, rotationSpeed) {
 		var div = container.children[i]; // Get the div element
 		var divAngle = angle * i + rotationAngle; // Calculate the individual div angle
 
-		var x = Math.cos((divAngle) * (Math.PI / 180)) * circleRadius;
+		var x = Math.cos((divAngle) * (Math.PI / 180)) * circleRadius * 1.5;
 		var y = Math.sin((divAngle) * (Math.PI / 180)) * circleRadius;
 
 		if (div) {
@@ -141,12 +142,14 @@ setTimeout(() => {
 		jumbledWords.forEach(function(word, index) {
 			if (index < largerSpinnerItems.length) {
 				const newWordItem = document.createElement("span");
+				newWordItem.style.opacity = 0;
 				newWordItem.textContent = word.word;
 				newWordItem.style.fontSize = Math.random() / 3 + 1.2 + 'rem'
 				largerSpinnerItems[index].appendChild(newWordItem);
 			}
 			else {
 				const newWordItem = document.createElement("span");
+				newWordItem.style.opacity = 0;
 				newWordItem.textContent = word.word;
 				newWordItem.style.fontSize = Math.random() / 3 + 1.2 + 'rem'
 				smallerSpinnerItems[index - largerSpinnerItems.length].appendChild(newWordItem);
@@ -154,7 +157,7 @@ setTimeout(() => {
 		});
 	}
 	appendRandomWord();
-}, 0);
+}, 5000);
 
 function randomFontSize(min, max, span) {
 	let fontSize = Math.random() * (max - min) + min;
@@ -164,24 +167,13 @@ function randomFontSize(min, max, span) {
 	return fontSize;
 }
 
-function fadeInStagger (speed, itemArray) {
-	const array = document.querySelectorAll(itemArray);
-	array.forEach( function(item, index) {
-		let stagger = (index / 1000) * speed;
-		item.style.setProperty('--fade-in-time', stagger);
-	});
-}
-
 setInterval(() => {
 	const spans = document.querySelectorAll('span');
-	spans.forEach(span => {
+	spans.forEach(function (span, itemIndex) {
 		span.style.fontSize = randomFontSize(1, 1.5, span) + 'rem';
 		span.style.opacity = randomFontSize(0.7, 1, span)
 	});
-}, 3000);
-
-fadeInStagger(1, 'span');
-
+}, 5000);
   
   
   
