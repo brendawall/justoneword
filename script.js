@@ -7,15 +7,15 @@ const observer = new IntersectionObserver((entries) => {
 		}
 	}))
 })
-
+  
 const hiddenElements = document.querySelectorAll('.hidden');
 hiddenElements.forEach((el) => observer.observe(el));
 
 const logo = document.querySelector('.logo');
-logo.playbackRate = 4;
+logo.playbackRate = 3;
 setTimeout(() => {
 	logo.classList.add('animation-end')
-}, 2000);
+}, 3000);
 
 function typeWriter(text, speed, pause, random) {
 	const originalText = text.textContent;
@@ -43,13 +43,13 @@ function typeWriter(text, speed, pause, random) {
 			}, randomSpeedArray[n-1]);		
 
 		}
-	}, 2000);
+	}, 4000);
 }
 
   const paragraph = document.querySelector('p');
   const skipButton = document.querySelector('.skip')
   
-  typeWriter(paragraph, 5, 50, 10)
+  typeWriter(paragraph, 4, 50, 15)
 
 const wordSection = document.querySelector('section.words');
 const wordArray = [
@@ -95,6 +95,34 @@ function readTextFile(filePath) {
 	  return fileContent;
 }
 
+const lessSpeed = document.querySelector('button.less-speed');
+const moreSpeed = document.querySelector('button.more-speed');
+
+lessSpeed.addEventListener("click", () => {
+	speedOfRotation -= 0.5;
+	if(speedOfRotation < 0) {
+		speedOfRotation = 0;
+	}
+	lessSpeed.style.transform = 'scale(1.2)'
+	setTimeout(() => {lessSpeed.style.transform = 'scale(1)'}, 100);
+})
+
+moreSpeed.addEventListener("click", () => {
+	speedOfRotation += 0.5;
+	if(speedOfRotation > 4) {
+		speedOfRotation = 4;
+	}
+	moreSpeed.style.transform = 'scale(1.2)'
+	setTimeout(() => {moreSpeed.style.transform = 'scale(1)'}, 100);
+})
+
+
+var speedOfRotation = 1.25;
+var minFontSize = 1.25;
+var maxFontSize = 1.85;
+
+console.log(minFontSize, maxFontSize)
+
 function generateDivs(numberOfDivs, circleRadius, container, rotationSpeed) {
 	var angle = 360 / numberOfDivs; // Angle between each div
 	var rotationAngle = 0; // Initial rotation angle
@@ -105,7 +133,7 @@ function generateDivs(numberOfDivs, circleRadius, container, rotationSpeed) {
 	}
 
 	function animateDivs() {
-	  rotationAngle += rotationSpeed; // Update the rotation angle
+	  rotationAngle += rotationSpeed * speedOfRotation; // Update the rotation angle
 
 	  for (var i = 0; i < numberOfDivs; i++) {
 		var div = container.children[i]; // Get the div element
@@ -142,38 +170,27 @@ setTimeout(() => {
 		jumbledWords.forEach(function(word, index) {
 			if (index < largerSpinnerItems.length) {
 				const newWordItem = document.createElement("span");
-				newWordItem.style.opacity = 0;
+				newWordItem.style.opacity = Math.random() / 2 + 0.6;
 				newWordItem.textContent = word.word;
-				newWordItem.style.fontSize = Math.random() / 3 + 1.2 + 'rem'
+				newWordItem.style.fontSize = Math.random() * (maxFontSize - minFontSize) + minFontSize + 'rem';
 				largerSpinnerItems[index].appendChild(newWordItem);
 			}
 			else {
 				const newWordItem = document.createElement("span");
-				newWordItem.style.opacity = 0;
+				newWordItem.style.opacity = Math.random() / 3 + 0.6;
 				newWordItem.textContent = word.word;
-				newWordItem.style.fontSize = Math.random() / 3 + 1.2 + 'rem'
+				newWordItem.style.fontSize =Math.random() * (maxFontSize - minFontSize) + minFontSize + 'rem';
 				smallerSpinnerItems[index - largerSpinnerItems.length].appendChild(newWordItem);
 			}
 		});
 	}
 	appendRandomWord();
-}, 5000);
+}, 10000);
 
 function randomFontSize(min, max, span) {
-	let fontSize = Math.random() * (max - min) + min;
-	if(span.textContent.split('').length <= 4) {
-		fontSize += .5;
-	}
+	let fontSize = (Math.random() * (max - min) + min);
 	return fontSize;
 }
-
-setInterval(() => {
-	const spans = document.querySelectorAll('span');
-	spans.forEach(function (span, itemIndex) {
-		span.style.fontSize = randomFontSize(1, 1.5, span) + 'rem';
-		span.style.opacity = randomFontSize(0.7, 1, span)
-	});
-}, 5000);
   
   
   
