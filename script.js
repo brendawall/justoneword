@@ -88,12 +88,7 @@ const wordArray = [
 	{word: 'Veil', file: 'veil'}
 ]
 
-function readTextFile(filePath) {
-	fetch(filePath)
-	  .then(response => response.text())
-	  .then(fileContent => fileContent)
-	  return fileContent;
-}
+
 
 const lessSpeed = document.querySelector('button.less-speed');
 const moreSpeed = document.querySelector('button.more-speed');
@@ -116,12 +111,29 @@ moreSpeed.addEventListener("click", () => {
 	setTimeout(() => {moreSpeed.style.transform = 'scale(1)'}, 100);
 })
 
+async function getTextContent(filePath) {
+  try {
+    const response = await fetch(filePath);
+    if (!response.ok) {
+      throw new Error('Failed to fetch the file.');
+    }
+    const textContent = await response.text();
+    return textContent;
+  } catch (error) {
+    console.error(`Error reading file: ${error}`);
+    return '';
+  }
+}
+
+async function logTextContent(filePath) {
+  const item = await getTextContent(filePath);
+  console.log(item);
+}
+
 
 var speedOfRotation = 1.25;
 var minFontSize = 1.25;
 var maxFontSize = 1.85;
-
-console.log(minFontSize, maxFontSize)
 
 function generateDivs(numberOfDivs, circleRadius, container, rotationSpeed) {
 	var angle = 360 / numberOfDivs; // Angle between each div
@@ -139,8 +151,8 @@ function generateDivs(numberOfDivs, circleRadius, container, rotationSpeed) {
 		var div = container.children[i]; // Get the div element
 		var divAngle = angle * i + rotationAngle; // Calculate the individual div angle
 
-		var x = Math.cos((divAngle) * (Math.PI / 180)) * circleRadius * 1.5;
-		var y = Math.sin((divAngle) * (Math.PI / 180)) * circleRadius;
+		var x = Math.cos((divAngle) * (Math.PI / 180)) * circleRadius;
+		var y = Math.sin((divAngle) * (Math.PI / 180)) * circleRadius * 0.6;
 
 		if (div) {
 		  div.style.left = (container.offsetWidth / 2 + x) + 'px';
@@ -157,35 +169,35 @@ function generateDivs(numberOfDivs, circleRadius, container, rotationSpeed) {
 
 const largerSpinner = document.querySelector('section.words > .spin-container-one');
 const smallerSpinner = document.querySelector('section.words > .spin-container-two');
-setTimeout(() => {
-	generateDivs(Math.round(wordArray.length * 0.6), largerSpinner.clientWidth / 2.25, largerSpinner, 0.05)
-	generateDivs(Math.round(wordArray.length * 0.4), smallerSpinner.clientWidth / 3.7, smallerSpinner, 0.1)
-	
-	function appendRandomWord() {
-		const largerSpinnerItems = document.querySelectorAll('section.words > .spin-container-one > div');
-		const smallerSpinnerItems = document.querySelectorAll('section.words > .spin-container-two > div');
-		const jumbledWords = wordArray.sort((a, b) => 0.5 - Math.random());
-		const spinnerItems = [];
-		var spinnerItemsLength = largerSpinnerItems.length + smallerSpinnerItems.length;
-		jumbledWords.forEach(function(word, index) {
-			if (index < largerSpinnerItems.length) {
-				const newWordItem = document.createElement("span");
-				newWordItem.style.opacity = Math.random() / 2 + 0.6;
-				newWordItem.textContent = word.word;
-				newWordItem.style.fontSize = Math.random() * (maxFontSize - minFontSize) + minFontSize + 'rem';
-				largerSpinnerItems[index].appendChild(newWordItem);
-			}
-			else {
-				const newWordItem = document.createElement("span");
-				newWordItem.style.opacity = Math.random() / 3 + 0.6;
-				newWordItem.textContent = word.word;
-				newWordItem.style.fontSize =Math.random() * (maxFontSize - minFontSize) + minFontSize + 'rem';
-				smallerSpinnerItems[index - largerSpinnerItems.length].appendChild(newWordItem);
-			}
-		});
-	}
-	appendRandomWord();
-}, 10000);
+
+generateDivs(Math.round(wordArray.length * 0.6), largerSpinner.clientWidth / 2.25, largerSpinner, 0.05)
+generateDivs(Math.round(wordArray.length * 0.4), smallerSpinner.clientWidth / 2.25, smallerSpinner, 0.1)
+
+function appendRandomWord() {
+	const largerSpinnerItems = document.querySelectorAll('section.words > .spin-container-one > div');
+	const smallerSpinnerItems = document.querySelectorAll('section.words > .spin-container-two > div');
+	const jumbledWords = wordArray.sort((a, b) => 0.5 - Math.random());
+	const spinnerItems = [];
+	var spinnerItemsLength = largerSpinnerItems.length + smallerSpinnerItems.length;
+	jumbledWords.forEach(function(word, index) {
+
+		const newWordItem = document.createElement("span");
+
+		if (index < largerSpinnerItems.length) {
+			newWordItem.style.opacity = Math.random() / 2 + 0.6;
+			newWordItem.textContent = word.word;
+			newWordItem.style.fontSize = Math.random() * (maxFontSize - minFontSize) + minFontSize + 'rem';
+			largerSpinnerItems[index].appendChild(newWordItem);
+		}
+		else {
+			newWordItem.style.opacity = Math.random() / 3 + 0.6;
+			newWordItem.textContent = word.word;
+			newWordItem.style.fontSize =Math.random() * (maxFontSize - minFontSize) + minFontSize + 'rem';
+			smallerSpinnerItems[index - largerSpinnerItems.length].appendChild(newWordItem);
+		}
+	});
+}
+appendRandomWord();
 
 function randomFontSize(min, max, span) {
 	let fontSize = (Math.random() * (max - min) + min);
