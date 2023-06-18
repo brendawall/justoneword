@@ -79,7 +79,7 @@ section.words {
     /* animation: dissolve-in 1s 10s ease forwards; */
 }
 
-section.words > * {
+section.words > *.spin-mode {
     grid-area: 1/1;
 }
 
@@ -96,18 +96,32 @@ section.words > * {
     background: none;
     border: none;
     gap: 1.5rem;
-    font-size: 2rem;                    
+    font-size: 2rem;              
+}
+
+.words-viewing-mode {
+    z-index: 1;
+    cursor: pointer;
+}
+
+.words-viewing-mode > button:nth-child(1) {width: 80%}
+.words-viewing-mode > button:nth-child(2) {width: 20%}
+
+.words-viewing-mode > button {
+    background: transparent;
+    border: none;
+    font-size: inherit;
 }
 
 .words-speed > button {font-size: 3rem; transform: scale(1); transition: 50ms all ease;}
 
-.spin-container-one, .spin-container-two {
+.spin-container-one.spin-mode, .spin-container-two.spin-mode {
     position: relative;
     width: 80%;
     height: 100%;
 }
 
-.spin-container-two {
+.spin-container-two.spin-mode {
     width: 50%;
     height: 60%;
 }
@@ -130,6 +144,24 @@ section.words > * {
 
 .word > span {
     transition: all 3s ease;
+}
+
+.list-mode-container {
+    all: unset;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 5rem;
+}
+
+.list-mode {
+    all: unset;
+    display: flex;
+    flex-direction: column;
+}
+
+.list-mode-word {
+    background: green;
 }
 
 @keyframes dissolve-in {

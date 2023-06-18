@@ -46,10 +46,13 @@ function typeWriter(text, speed, pause, random) {
 	}, 4000);
 }
 
-  const paragraph = document.querySelector('p');
-  const skipButton = document.querySelector('.skip')
-  
-  typeWriter(paragraph, 4, 50, 15)
+const paragraph = document.querySelector('p');
+const skipButton = document.querySelector('.skip')
+
+typeWriter(paragraph, 4, 50, 15)
+
+// True = Spinning, False = List View
+var viewingMode = true;
 
 const wordSection = document.querySelector('section.words');
 const wordArray = [
@@ -88,8 +91,6 @@ const wordArray = [
 	{word: 'Veil', file: 'veil'}
 ]
 
-
-
 const lessSpeed = document.querySelector('button.less-speed');
 const moreSpeed = document.querySelector('button.more-speed');
 
@@ -100,7 +101,7 @@ lessSpeed.addEventListener("click", () => {
 	}
 	lessSpeed.style.transform = 'scale(1.2)'
 	setTimeout(() => {lessSpeed.style.transform = 'scale(1)'}, 100);
-})
+});
 
 moreSpeed.addEventListener("click", () => {
 	speedOfRotation += 0.5;
@@ -109,7 +110,7 @@ moreSpeed.addEventListener("click", () => {
 	}
 	moreSpeed.style.transform = 'scale(1.2)'
 	setTimeout(() => {moreSpeed.style.transform = 'scale(1)'}, 100);
-})
+});
 
 async function getTextContent(filePath) {
   try {
@@ -130,48 +131,61 @@ async function logTextContent(filePath) {
   console.log(item);
 }
 
-
 var speedOfRotation = 1.25;
 var minFontSize = 1.25;
 var maxFontSize = 1.85;
 
+var animationData = { requestId: null }; // Object to store the request ID
+var viewingMode = true; // Initial viewing mode
+
 function generateDivs(numberOfDivs, circleRadius, container, rotationSpeed) {
-	var angle = 360 / numberOfDivs; // Angle between each div
-	var rotationAngle = 0; // Initial rotation angle
+  var angle = 360 / numberOfDivs; // Angle between each div
+  var rotationAngle = 0; // Initial rotation angle
 
-	for (var i = 0; i < numberOfDivs; i++) {
-	  var div = document.createElement('div');
-	  container.appendChild(div);
-	}
+  for (var i = 0; i < numberOfDivs; i++) {
+    var div = document.createElement('div');
+    container.appendChild(div);
+  }
 
-	function animateDivs() {
-	  rotationAngle += rotationSpeed * speedOfRotation; // Update the rotation angle
+  function animateDivs() {
+    rotationAngle += rotationSpeed * speedOfRotation; // Update the rotation angle
 
-	  for (var i = 0; i < numberOfDivs; i++) {
-		var div = container.children[i]; // Get the div element
-		var divAngle = angle * i + rotationAngle; // Calculate the individual div angle
+    for (var i = 0; i < numberOfDivs; i++) {
+      var div = container.children[i]; // Get the div element
+      var divAngle = angle * i + rotationAngle; // Calculate the individual div angle
 
-		var x = Math.cos((divAngle) * (Math.PI / 180)) * circleRadius;
-		var y = Math.sin((divAngle) * (Math.PI / 180)) * circleRadius * 0.6;
+      var x = Math.cos((divAngle) * (Math.PI / 180)) * circleRadius;
+      var y = Math.sin((divAngle) * (Math.PI / 180)) * circleRadius * 0.6;
 
-		if (div) {
-		  div.style.left = (container.offsetWidth / 2 + x) + 'px';
-		  div.style.top = (container.offsetHeight / 2 + y) + 'px';
-		  div.classList.add('word')
-		}
-	  }
+      if (div) {
+        div.style.left = (container.offsetWidth / 2 + x) + 'px';
+        div.style.top = (container.offsetHeight / 2 + y) + 'px';
+        div.classList.add('word');
+      }
+    }
 
-	  requestAnimationFrame(animateDivs); // Call the function again for smooth animation
-	}
+    if (viewingMode) {
+      animationData.requestId = requestAnimationFrame(animateDivs);
+    }
+  }
 
-	animateDivs(); // Start the animation
+  animationData.requestId = requestAnimationFrame(animateDivs); // Start the animation
+
+  return function cancelAnimation() {
+    cancelAnimationFrame(animationData.requestId);
+  };
 }
 
 const largerSpinner = document.querySelector('section.words > .spin-container-one');
 const smallerSpinner = document.querySelector('section.words > .spin-container-two');
 
-generateDivs(Math.round(wordArray.length * 0.6), largerSpinner.clientWidth / 2.25, largerSpinner, 0.05)
-generateDivs(Math.round(wordArray.length * 0.4), smallerSpinner.clientWidth / 2.25, smallerSpinner, 0.1)
+var cancelAnimations = [];
+
+var cancelAnimation1 = generateDivs(Math.round(wordArray.length * 0.6), largerSpinner.clientWidth / 2.25, largerSpinner, 0.05);
+cancelAnimations.push(cancelAnimation1);
+
+var cancelAnimation2 = generateDivs(Math.round(wordArray.length * 0.4), smallerSpinner.clientWidth / 2.25, smallerSpinner, 0.1);
+cancelAnimations.push(cancelAnimation2);
 
 function appendRandomWord() {
 	const largerSpinnerItems = document.querySelectorAll('section.words > .spin-container-one > div');
@@ -203,6 +217,30 @@ function randomFontSize(min, max, span) {
 	let fontSize = (Math.random() * (max - min) + min);
 	return fontSize;
 }
+
+const listButton = document.querySelector('.words-viewing-mode');
+listButton.addEventListener('click', function () {
+  viewingMode = false;
+  cancelAnimations.forEach(cancelAnimation => cancelAnimation());
+
+	const buttons = document.querySelector('.buttons')
+	buttons.remove();
+
+	largerSpinner.classList.remove('spin-mode');
+	smallerSpinner.classList.remove('spin-mode');
+	
+	largerSpinner.classList.add('list-mode');
+	smallerSpinner.classList.add('list-mode');
+	wordSection.classList.add('list-mode-container');
+
+  	const unsetItems = document.querySelectorAll('section.words > .spin-container-one > *, section.words > .spin-container-two > *')
+	  for(let i = 0; i<unsetItems.length; i++) {
+		setTimeout(() => {
+			unsetItems[i].classList.add('list-mode-word');
+		}, 100);
+	}
+});
+
   
   
   
