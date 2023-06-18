@@ -18,9 +18,13 @@ video::-webkit-media-controls {
 
 .hidden {
     opacity: 0; 
+    transform: translate(-10%, -1%) scale(.4);
     transition: all 1s ease;
 }
-.show {opacity: 1}
+.show {
+    transform: translate(0%, 0%) scale(1);
+    opacity: 1
+}
 
 .section {
     display: grid;
@@ -30,6 +34,11 @@ video::-webkit-media-controls {
 }
 
 .min-width {padding-inline: 10vw;}
+
+.info {
+    opacity: 0;
+    animation: dissolve-in 1ms 4s linear forwards;
+}
 
 .logo {
     width: 40vw;
@@ -52,7 +61,19 @@ video::-webkit-media-controls {
 }
 
 .logo.animation-end {
-    animation: forwards fade-to-black 3s ease;
+    animation: 
+        forwards fade-to-black 3s ease,
+        forwards shrink 2s ease;
+        ;
+}
+
+@keyframes shrink {
+    100% {
+        width: 20vw;
+        height: 20vw;
+        max-width: 350px;
+        max-height: 350px;
+    }
 }
 
 .skip-animation {
@@ -75,8 +96,8 @@ section.words {
     width: 100vw;
     padding: 0;
     height: 50vw;
-    /* opacity: 0; */
-    /* animation: dissolve-in 1s 10s ease forwards; */
+    opacity: 0;
+    animation: dissolve-in 1s 10s ease forwards;
 }
 
 section.words > *.spin-mode {
@@ -84,8 +105,25 @@ section.words > *.spin-mode {
 }
 
 .buttons {
+    position: relative;
     display: grid;
     gap: 2rem;
+}
+
+.buttons::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: '';
+    width: 35rem;
+    height: 35rem;
+    transform: translate(-12.5rem, -12.5rem);
+    background: url(./Ink-overlays/button-overlay.png);
+    background-color: transparent;
+    background-size: cover;
+    background-position: center center;
+    background-blend-mode: darken;
+    z-index: -2;
 }
 
 .clicked {transform: scale(1.2);}
@@ -126,7 +164,7 @@ section.words > *.spin-mode {
     height: 60%;
 }
 
-.word {
+.word.spin-mode {
     position: absolute;
     font-weight: 600;
     font-size: 1.25rem;
@@ -135,7 +173,7 @@ section.words > *.spin-mode {
     transition: all 200ms;
 }
 
-.word:hover {
+.word.spin-mode:hover {
     cursor: pointer;
     transform: scale(1.3) translate(-40%, -40%); 
     filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.233));
@@ -146,22 +184,27 @@ section.words > *.spin-mode {
     transition: all 3s ease;
 }
 
-.list-mode-container {
-    all: unset;
-    width: 100%;
+.section-list-mode {
     display: flex;
     justify-content: center;
-    gap: 5rem;
 }
 
-.list-mode {
-    all: unset;
-    display: flex;
-    flex-direction: column;
+.container-list-mode {
+    max-width: 40%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
 }
 
-.list-mode-word {
-    background: green;
+.word-list-mode {
+    font-size: 1.75rem;
+    font-weight: 500;
+    transition: transform 200ms ease;
+}
+
+.word-list-mode:hover {
+    cursor: pointer;
+    transform: scale(1.2) translate(1rem, 0);
 }
 
 @keyframes dissolve-in {
@@ -183,4 +226,5 @@ section.words > *.spin-mode {
 .intro {
     font-size: 1.5rem;
     width: 100%;
+
 }

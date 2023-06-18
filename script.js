@@ -39,7 +39,9 @@ function typeWriter(text, speed, pause, random) {
 			}
 			
 			setTimeout(() => {
-				text.textContent += modifiedText[n]
+				if(text.textContent != originalText) {
+					text.textContent += modifiedText[n]
+				}
 			}, randomSpeedArray[n-1]);		
 
 		}
@@ -47,7 +49,14 @@ function typeWriter(text, speed, pause, random) {
 }
 
 const paragraph = document.querySelector('p');
-const skipButton = document.querySelector('.skip')
+const originalText = paragraph.textContent;
+console.log(originalText)
+const skipButton = document.querySelector('.skip-animation')
+
+skipButton.addEventListener("click", () => {
+	paragraph.textContent = ''
+	paragraph.textContent = originalText;
+})
 
 typeWriter(paragraph, 4, 50, 15)
 
@@ -161,6 +170,7 @@ function generateDivs(numberOfDivs, circleRadius, container, rotationSpeed) {
         div.style.left = (container.offsetWidth / 2 + x) + 'px';
         div.style.top = (container.offsetHeight / 2 + y) + 'px';
         div.classList.add('word');
+        div.classList.add('spin-mode');
       }
     }
 
@@ -206,9 +216,11 @@ function appendRandomWord() {
 		else {
 			newWordItem.style.opacity = Math.random() / 3 + 0.6;
 			newWordItem.textContent = word.word;
-			newWordItem.style.fontSize =Math.random() * (maxFontSize - minFontSize) + minFontSize + 'rem';
+			newWordItem.style.fontSize = Math.random() * (maxFontSize - minFontSize) + minFontSize + 'rem';
 			smallerSpinnerItems[index - largerSpinnerItems.length].appendChild(newWordItem);
 		}
+
+		newWordItem.parentElement.ariaLabel = jumbledWords[index].file;
 	});
 }
 appendRandomWord();
@@ -225,20 +237,24 @@ listButton.addEventListener('click', function () {
 
 	const buttons = document.querySelector('.buttons')
 	buttons.remove();
+	largerSpinner.remove();
+	smallerSpinner.remove();
 
-	largerSpinner.classList.remove('spin-mode');
-	smallerSpinner.classList.remove('spin-mode');
-	
-	largerSpinner.classList.add('list-mode');
-	smallerSpinner.classList.add('list-mode');
-	wordSection.classList.add('list-mode-container');
+	const wordContainer = document.createElement("div");
+	wordContainer.classList.add('container-list-mode');
 
-  	const unsetItems = document.querySelectorAll('section.words > .spin-container-one > *, section.words > .spin-container-two > *')
-	  for(let i = 0; i<unsetItems.length; i++) {
-		setTimeout(() => {
-			unsetItems[i].classList.add('list-mode-word');
-		}, 100);
-	}
+	wordSection.appendChild(wordContainer);
+	wordSection.classList.add('section-list-mode')
+
+	wordArray.forEach( function(word, index) {
+		const newWordItem = document.createElement("span");
+		newWordItem.textContent = word.word;
+		newWordItem.ariaLabel = word.file;
+		newWordItem.classList.add('word')
+		newWordItem.classList.add('word-list-mode')
+
+		wordContainer.appendChild(newWordItem)
+	})
 });
 
   
