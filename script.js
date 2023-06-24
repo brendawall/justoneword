@@ -54,7 +54,6 @@ function typeWriter(text, speed, pause, random) {
 
 const paragraph = document.querySelector('p');
 const originalText = paragraph.textContent;
-console.log(originalText)
 const skipButton = document.querySelector('.skip-animation')
 
 skipButton.addEventListener("click", () => {
@@ -235,33 +234,68 @@ function randomFontSize(min, max, span) {
 	return fontSize;
 }
 
+function listMode() {
+	viewingMode = false;
+	cancelAnimations.forEach(cancelAnimation => cancelAnimation());
+  
+	  const buttons = document.querySelector('.buttons')
+	  buttons.remove();
+	  largerSpinner.remove();
+	  smallerSpinner.remove();
+  
+	  const wordContainer = document.createElement("div");
+	  wordContainer.classList.add('container-list-mode');
+  
+	  wordSection.appendChild(wordContainer);
+	  wordSection.classList.add('section-list-mode')
+  
+	  wordArray.forEach( function(word, index) {
+		  const newWordItem = document.createElement("span");
+		  newWordItem.textContent = word.word;
+		  newWordItem.ariaLabel = word.file;
+		  newWordItem.classList.add('word')
+		  newWordItem.classList.add('word-list-mode')
+  
+		  wordContainer.appendChild(newWordItem)
+	  })
+}
+
 const listButton = document.querySelector('.words-viewing-mode');
-listButton.addEventListener('click', function () {
-  viewingMode = false;
-  cancelAnimations.forEach(cancelAnimation => cancelAnimation());
+listButton.addEventListener("click", () => {listMode();})
 
-	const buttons = document.querySelector('.buttons')
-	buttons.remove();
-	largerSpinner.remove();
-	smallerSpinner.remove();
+function maxWidth(maxClientWidth) {
+	const clientWidth = innerWidth;
+	if(maxClientWidth > clientWidth) {return true}
+	else {return false}
+}
 
-	const wordContainer = document.createElement("div");
-	wordContainer.classList.add('container-list-mode');
+function minWidth(minClientWidth) {
+	const clientWidth = innerWidth;
+	if(minClientWidth < clientWidth) {return true}
+	else {return false}
+}
 
-	wordSection.appendChild(wordContainer);
-	wordSection.classList.add('section-list-mode')
+// Media Queries
 
-	wordArray.forEach( function(word, index) {
-		const newWordItem = document.createElement("span");
-		newWordItem.textContent = word.word;
-		newWordItem.ariaLabel = word.file;
-		newWordItem.classList.add('word')
-		newWordItem.classList.add('word-list-mode')
+if(minWidth(2000)) {
+	const alterItems = document.querySelectorAll('section.words > div > div > span')
+	alterItems.forEach(item => {
+		var originalFontSize = parseFloat(((item.style.fontSize).slice(0, -3)));
+		item.style.fontSize = (originalFontSize + 1) + 'rem'
+	});
+}
 
-		wordContainer.appendChild(newWordItem)
-	})
-});
+if(maxWidth(1025)) {
+	const alterItems = document.querySelectorAll('section.words > div > div > span')
+	alterItems.forEach(item => {
+		var originalFontSize = parseFloat(((item.style.fontSize).slice(0, -3)));
+		item.style.fontSize = (originalFontSize - 0.3) + 'rem'
+	});
+}
 
+if(maxWidth(800)) {
+	listMode();
+}
   
   
   

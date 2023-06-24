@@ -124,6 +124,7 @@ section.words > *.spin-mode {
 .words-viewing-mode {
     z-index: 1;
     cursor: pointer;
+    font-size: 2.25rem;
     transition: transform 200ms ease;
 }
 
@@ -167,8 +168,13 @@ section.words > *.spin-mode {
     opacity: 1;
 }
 
-.word > span {
-    transition: all 3s ease;
+.word {
+    transition: all 0.1ms ease;
+}
+
+section.words.section-list-mode {
+    width: minmax(80vw, 100vw);
+    height: auto;
 }
 
 .section-list-mode {
@@ -177,7 +183,7 @@ section.words > *.spin-mode {
 }
 
 .container-list-mode {
-    max-width: 40%;
+    max-width: 80%;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
@@ -214,4 +220,20 @@ section.words > *.spin-mode {
     font-size: 1.5rem;
     width: 100%;
 
+}
+
+@media (max-width: 650px) {
+    .logo {
+        width: 70vw;
+        height: 70vw;
+    }
+    section:has(.logo) {
+        padding-inline: 2rem;
+    }
+
+    .intro {font-size: 1.125rem;}
+
+    section.words > div > span {
+        font-size: 1.5rem;
+    }
 }
