@@ -17,6 +17,10 @@ setTimeout(() => {
 	logo.classList.add('animation-end')
 }, 3000);
 
+
+const wordSection = document.querySelector('section.words');
+wordSection.style.animation = 'dissolve-in 1s 20s ease forwards'
+
 function typeWriter(text, speed, pause, random) {
 	const originalText = text.textContent;
 	const modifiedText = originalText.split('');
@@ -56,6 +60,8 @@ const skipButton = document.querySelector('.skip-animation')
 skipButton.addEventListener("click", () => {
 	paragraph.textContent = ''
 	paragraph.textContent = originalText;
+	wordSection.style.animation = ''
+	wordSection.style.opacity = 1;
 })
 
 typeWriter(paragraph, 4, 50, 15)
@@ -63,7 +69,6 @@ typeWriter(paragraph, 4, 50, 15)
 // True = Spinning, False = List View
 var viewingMode = true;
 
-const wordSection = document.querySelector('section.words');
 const wordArray = [
 	{word: 'Abyss', file: 'abyss'},
 	{word: 'Alpha Omega', file: 'alpha-omega'},

@@ -47,7 +47,7 @@ video::-webkit-media-controls {
     max-height: 700px;
     object-fit: cover;
     background: black;
-    mix-blend-mode: darken;
+    mix-blend-mode: multiply;
     -webkit-mask-image: url(./icons/logo.png);
     mask-image: url(./icons/logo.png);
 
@@ -97,7 +97,7 @@ section.words {
     padding: 0;
     height: 50vw;
     opacity: 0;
-    animation: dissolve-in 1s 10s ease forwards;
+    transition: all 1s ease;
 }
 
 section.words > *.spin-mode {
@@ -108,22 +108,6 @@ section.words > *.spin-mode {
     position: relative;
     display: grid;
     gap: 2rem;
-}
-
-.buttons::after {
-    position: absolute;
-    top: 0;
-    left: 0;
-    content: '';
-    width: 35rem;
-    height: 35rem;
-    transform: translate(-12.5rem, -12.5rem);
-    background: url(./Ink-overlays/button-overlay.png);
-    background-color: transparent;
-    background-size: cover;
-    background-position: center center;
-    background-blend-mode: darken;
-    z-index: -2;
 }
 
 .clicked {transform: scale(1.2);}
@@ -140,7 +124,10 @@ section.words > *.spin-mode {
 .words-viewing-mode {
     z-index: 1;
     cursor: pointer;
+    transition: transform 200ms ease;
 }
+
+.words-viewing-mode:hover {transform: scale(1.1)}
 
 .words-viewing-mode > button:nth-child(1) {width: 80%}
 .words-viewing-mode > button:nth-child(2) {width: 20%}
