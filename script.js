@@ -55,12 +55,15 @@ function typeWriter(text, speed, pause, random) {
 const paragraph = document.querySelector('p');
 const originalText = paragraph.textContent;
 const skipButton = document.querySelector('.skip-animation')
+const hr = document.querySelector('hr')
+setTimeout(() => {hr.classList.add('active')}, 20000);
 
 skipButton.addEventListener("click", () => {
 	paragraph.textContent = ''
 	paragraph.textContent = originalText;
 	wordSection.style.animation = ''
 	wordSection.style.opacity = 1;
+	hr.classList.add('active')
 })
 
 typeWriter(paragraph, 4, 50, 15)

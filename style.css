@@ -104,6 +104,17 @@ section.words > *.spin-mode {
     grid-area: 1/1;
 }
 
+hr {
+    height: .1em;
+    background: linear-gradient(90deg, rgb(0, 0, 0) 0%, transparent 0%);
+    border: none;
+    transition: all 600ms ease;
+}
+
+hr.active {
+    background: linear-gradient(90deg, rgb(0, 0, 0) 0%, transparent 1000%);
+}
+
 .buttons {
     position: relative;
     display: grid;
@@ -180,6 +191,8 @@ section.words.section-list-mode {
 .section-list-mode {
     display: flex;
     justify-content: center;
+    opacity: 0;
+    animation: dissolve-in 1s 20s ease forwards;
 }
 
 .container-list-mode {
@@ -192,7 +205,7 @@ section.words.section-list-mode {
 .word-list-mode {
     font-size: 1.75rem;
     font-weight: 500;
-    transition: transform 200ms ease;
+    transition: all 200ms ease;
 }
 
 .word-list-mode:hover {
