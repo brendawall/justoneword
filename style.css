@@ -37,6 +37,7 @@ video::-webkit-media-controls {
 
 .info {
     opacity: 0;
+    position: relative;
     animation: dissolve-in 1ms 4s linear forwards;
 }
 
@@ -106,14 +107,15 @@ section.words > *.spin-mode {
 
 hr {
     height: .1em;
-    background: linear-gradient(90deg, rgb(0, 0, 0) 0%, transparent 0%);
+    width: 0%;
+    margin: auto;
+    opacity: 0;
+    background: radial-gradient(black, transparent 80%);
     border: none;
-    transition: all 600ms ease;
+    transition: all 1s ease;
 }
 
-hr.active {
-    background: linear-gradient(90deg, rgb(0, 0, 0) 0%, transparent 1000%);
-}
+hr.active {opacity: 1; width: 100%}
 
 .buttons {
     position: relative;
@@ -184,7 +186,8 @@ hr.active {
 }
 
 section.words.section-list-mode {
-    width: minmax(80vw, 100vw);
+    margin: 1rem;
+    padding-inline: 5rem;
     height: auto;
 }
 
@@ -213,6 +216,89 @@ section.words.section-list-mode {
     transform: scale(1.2) translate(1rem, 0);
 }
 
+.intro {
+    font-size: 1.5rem;
+    width: 100%;
+    padding-block: 1.5rem;
+}
+
+.intro > .continue-reading {display: none;}
+
+@media (max-width: 800px) {
+    .intro {
+        position: relative;
+        max-height: 40vh;
+        overflow: hidden;
+    }
+
+    .info > .continue-reading {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        bottom: 0;
+        width: 100%;
+        height: 3.5rem;
+        z-index: 3;
+    }
+    .continue-reading {
+        opacity: 0;
+        animation: forwards dissolve-in 500ms ease;
+        animation-delay: 100s;
+    }
+    .info > .continue-reading > button {
+        position: relative;
+        border: none;
+        background: transparent;
+        font-size: 2rem;
+    }
+    .info > .continue-reading > button::after {
+        position: absolute;
+        bottom: -.1rem;
+        left: 0;
+        content: '';
+        width: 0%;
+        height: 2px;
+        background: black;
+        transition: width 500ms cubic-bezier(.75,.04,.83,.67);
+    }
+    .info > .continue-reading > button:hover::after {width: 100%}
+    .intro::after {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        content: '';
+        width: 100%;
+        text-align: center;
+        align-items: center;
+        height: 10rem;
+        background: url(./assets/parchment_seamless.jpg);
+        background-size: 100vw 100vh;
+        background-position: 50% 0;
+        -webkit-mask: linear-gradient(transparent, black 80%);
+        mask: linear-gradient(transparent, black 80%)
+    }
+}
+
+@media (max-width: 650px) {
+    .logo {
+        width: 70vw;
+        height: 70vw;
+    }
+    section:has(.logo) {
+        padding-inline: 2rem;
+    }
+
+    .intro {
+        font-size: 1.125rem;
+    }
+
+    section.words > div > span {
+        font-size: 1.5rem;
+    }
+}
+
 @keyframes dissolve-in {
     0% {opacity: 0;}
     100% {opacity: 1;}
@@ -226,27 +312,5 @@ section.words.section-list-mode {
     100% {
         -webkit-filter: brightness(0);
         filter: brightness(0);
-    }
-}
-
-.intro {
-    font-size: 1.5rem;
-    width: 100%;
-
-}
-
-@media (max-width: 650px) {
-    .logo {
-        width: 70vw;
-        height: 70vw;
-    }
-    section:has(.logo) {
-        padding-inline: 2rem;
-    }
-
-    .intro {font-size: 1.125rem;}
-
-    section.words > div > span {
-        font-size: 1.5rem;
     }
 }
