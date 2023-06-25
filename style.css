@@ -219,16 +219,17 @@ section.words.section-list-mode {
 .intro {
     font-size: 1.5rem;
     width: 100%;
-    padding-block: 1.5rem;
+    padding-bottom: 1.5rem;
 }
 
-.intro > .continue-reading {display: none;}
+.info > .continue-reading {display: none;}
 
 @media (max-width: 800px) {
     .intro {
         position: relative;
         max-height: 40vh;
         overflow: hidden;
+        transition: max-height 1s ease;
     }
 
     .info > .continue-reading {
@@ -241,17 +242,16 @@ section.words.section-list-mode {
         width: 100%;
         height: 3.5rem;
         z-index: 3;
-    }
-    .continue-reading {
+
         opacity: 0;
-        animation: forwards dissolve-in 500ms ease;
-        animation-delay: 100s;
+        animation: forwards dissolve-in 1s 15s ease;
     }
     .info > .continue-reading > button {
         position: relative;
         border: none;
         background: transparent;
-        font-size: 2rem;
+        font-size: 1.75rem;
+        transition: all 1s ease;
     }
     .info > .continue-reading > button::after {
         position: absolute;
@@ -261,10 +261,14 @@ section.words.section-list-mode {
         width: 0%;
         height: 2px;
         background: black;
-        transition: width 500ms cubic-bezier(.75,.04,.83,.67);
+        transition: width 200ms ease;
     }
     .info > .continue-reading > button:hover::after {width: 100%}
+
+    .max-height {max-height: 200%;}
+
     .intro::after {
+        opacity: 0;
         position: absolute;
         bottom: 0;
         left: 0;
@@ -277,8 +281,9 @@ section.words.section-list-mode {
         background-size: 100vw 100vh;
         background-position: 50% 0;
         -webkit-mask: linear-gradient(transparent, black 80%);
-        mask: linear-gradient(transparent, black 80%)
+        mask: linear-gradient(transparent, black 80%);
     }
+    .overlay-in::after {opacity: 1}
 }
 
 @media (max-width: 650px) {
@@ -296,6 +301,10 @@ section.words.section-list-mode {
 
     section.words > div > span {
         font-size: 1.5rem;
+    }
+    section.words.section-list-mode {
+        margin: 1rem;
+        padding: 2rem 1rem;
     }
 }
 

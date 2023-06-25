@@ -55,6 +55,9 @@ function typeWriter(text, speed, pause, random) {
 const paragraph = document.querySelector('p');
 const originalText = paragraph.textContent;
 const skipButton = document.querySelector('.skip-animation')
+const continueReading = document.querySelector('.info > .continue-reading > button');
+const continueReadingContainer = document.querySelector('.info > .continue-reading');
+const continueReadingOverlay = document.querySelector('.info::after');
 const hr = document.querySelector('hr')
 setTimeout(() => {hr.classList.add('active')}, 20000);
 
@@ -64,6 +67,9 @@ skipButton.addEventListener("click", () => {
 	wordSection.style.animation = ''
 	wordSection.style.opacity = 1;
 	hr.classList.add('active')
+	continueReadingContainer.style.animation = ''
+	continueReadingContainer.style.opacity = '1';
+	paragraph.classList.add('overlay-in')
 })
 
 typeWriter(paragraph, 4, 50, 15)
@@ -298,6 +304,20 @@ if(maxWidth(1025)) {
 
 if(maxWidth(800)) {
 	listMode();
+	var toggle = 1;
+	continueReading.addEventListener("click", () => {
+		toggle++;
+		paragraph.textContent = '';
+		paragraph.textContent = originalText;
+		paragraph.classList.toggle('max-height')
+		continueReading.style.animation = '';
+		if(toggle % 2 == 0) {
+			continueReading.textContent = 'Show Less';
+		} else {
+			continueReading.textContent = 'Continue Reading';
+		}
+	})
+
 }
   
   
