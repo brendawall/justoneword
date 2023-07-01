@@ -304,20 +304,9 @@ if(maxWidth(1025)) {
 
 if(maxWidth(800)) {
 	listMode();
-	var toggle = 1;
-	continueReading.addEventListener("click", () => {
-		toggle++;
-		paragraph.textContent = '';
-		paragraph.textContent = originalText;
-		paragraph.classList.toggle('max-height')
-		continueReading.style.animation = '';
-		if(toggle % 2 == 0) {
-			continueReading.textContent = 'Show Less';
-		} else {
-			continueReading.textContent = 'Continue Reading';
-		}
+	paragraph.addEventListener("click", () => {
+		paragraph.classList.toggle('expanded')
 	})
-
 }
   
   
