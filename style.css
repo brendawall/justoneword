@@ -40,6 +40,26 @@ video::-webkit-media-controls {
     padding-inline: 5rem;
 }
 
+.random-word-section {
+    display: flex; 
+    gap: 3rem;
+    justify-content: center;
+    opacity: 0;
+    animation: dissolve-in forwards 1s 3s ease;
+}
+
+.random-word-section > h2 {font-weight: 400; font-size: 2.125rem;}
+
+.random-word-section > span {font-weight: 600; font-size: 2.5rem; transition: transform 200ms ease}
+
+.random-word-section > span:hover {transform: scale(1.2)}
+
+
+@media(max-width: 1100px) {.random-word-section > h2, .random-word-section > span{font-size: 2rem;}}
+@media(max-width: 1000px) {.random-word-section > h2, .random-word-section > span{font-size: 1.75rem;}}
+@media(max-width: 900px) {.random-word-section > h2, .random-word-section > span{font-size: 1.5rem;}}
+@media(max-width: 880px) {.random-word-section, .div-1 {display: none}}
+
 .min-width {padding-inline: 10vw;}
 
 .info {
@@ -56,7 +76,7 @@ video::-webkit-media-controls {
     object-fit: cover;
     background: black;
     mix-blend-mode: multiply;
-    -webkit-mask-image: url(./icons/logo.png);
+    -webkit-mask-image: url(./icons/Logo.svg);
     mask-image: url(./icons/logo.png);
 
     mask-size: contain;
@@ -190,6 +210,10 @@ hr.active {opacity: 1; width: 100%}
 
 .word {
     transition: all 0.1ms ease;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 section.words.section-list-mode {
@@ -217,10 +241,12 @@ section.words.section-list-mode {
 }
 
 .word-list-mode {
+    position: relative;
     font-size: 1.5rem;
-    font-weight: 300;
+    font-weight: 400;
     transition: all 200ms ease;
 }
+
 
 .word-list-mode:hover {
     cursor: pointer;
@@ -234,6 +260,12 @@ section.words.section-list-mode {
 }
 
 .info > .continue-reading {display: none;}
+
+@media (min-width: 750px) {
+    .container-list-mode {gap: 20vw}
+    .word {font-size: 2.5rem; 
+    /* This is overwritten by javascript} */
+}
 
 @media (max-width: 800px) {
     .intro {

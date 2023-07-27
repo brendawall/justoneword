@@ -15,6 +15,7 @@ const logo = document.querySelector('.logo');
 logo.playbackRate = 3;
 setTimeout(() => {
 	logo.classList.add('animation-end')
+	document.querySelector('.div-1').classList.add('active')
 }, 3000);
 
 
@@ -55,7 +56,7 @@ function typeWriter(text, speed, pause, random) {
 const paragraph = document.querySelector('p');
 const originalText = paragraph.textContent;
 const skipButton = document.querySelector('.skip-animation')
-const hr = document.querySelector('hr')
+const hr = document.querySelector('.div-2')
 setTimeout(() => {hr.classList.add('active')}, 20000);
 
 skipButton.addEventListener("click", () => {
@@ -107,6 +108,15 @@ const wordArray = [
 	{word: 'Time', file: 'time'},
 	{word: 'Veil', file: 'veil'}
 ]
+
+const randomWordSpan = document.querySelector('section.random-word-section > span')
+
+setInterval(() => {
+	randomWordSpan.classList.add('word');
+	const randomIndex = Math.floor((Math.random() * wordArray.length));
+	randomWordSpan.textContent = wordArray[randomIndex].word;
+	randomWordSpan.ariaLabel = wordArray[randomIndex].file;
+}, 5000);
 
 const lessSpeed = document.querySelector('button.less-speed');
 const moreSpeed = document.querySelector('button.more-speed');
@@ -238,6 +248,16 @@ function randomFontSize(min, max, span) {
 	return fontSize;
 }
 
+function firstOfLetter(str) {
+	const upperStr = str.toUpperCase();
+	const firstChar = upperStr.charAt(0);
+	const firstWordWithLetter = wordArray.find(
+	  (item) => item.word.toUpperCase().charAt(0) === firstChar
+	);
+
+	return !firstWordWithLetter || firstWordWithLetter.word.toUpperCase() === upperStr;
+  }
+
 function listMode() {
 	viewingMode = false;
 	cancelAnimations.forEach(cancelAnimation => cancelAnimation());
@@ -264,9 +284,14 @@ function listMode() {
 		  newWordItem.ariaLabel = word.file;
 		  newWordItem.classList.add('word')
 		  newWordItem.classList.add('word-list-mode')
-		  newWordItem.classList.add(word.word.charAt(0));
 		  newWordItem.style.fontSize = '1.5rem';
+
+		  if(minWidth(750)) {newWordItem.style.fontSize = '2rem'}
 		  
+		  if(firstOfLetter(word.word)) {
+			  newWordItem.classList.add('first-of-letter')
+			  newWordItem.setAttribute('data-letter', word.word.charAt(0))
+			}
 		  if(index < (wordArray.length / 2)) {columnOne.appendChild(newWordItem)}
 		  if(index > (wordArray.length / 2)) {columnTwo.appendChild(newWordItem)}
 	  })
