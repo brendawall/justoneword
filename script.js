@@ -55,20 +55,15 @@ function typeWriter(text, speed, pause, random) {
 const paragraph = document.querySelector('p');
 const originalText = paragraph.textContent;
 const skipButton = document.querySelector('.skip-animation')
-const continueReading = document.querySelector('.info > .continue-reading > button');
-const continueReadingContainer = document.querySelector('.info > .continue-reading');
-const continueReadingOverlay = document.querySelector('.info::after');
 const hr = document.querySelector('hr')
 setTimeout(() => {hr.classList.add('active')}, 20000);
 
 skipButton.addEventListener("click", () => {
 	paragraph.textContent = ''
 	paragraph.textContent = originalText;
-	wordSection.style.animation = ''
+	wordSection.classList.add('disable-css-animations')
 	wordSection.style.opacity = 1;
 	hr.classList.add('active')
-	continueReadingContainer.style.animation = ''
-	continueReadingContainer.style.opacity = '1';
 	paragraph.classList.add('overlay-in')
 })
 
@@ -213,7 +208,7 @@ cancelAnimations.push(cancelAnimation2);
 function appendRandomWord() {
 	const largerSpinnerItems = document.querySelectorAll('section.words > .spin-container-one > div');
 	const smallerSpinnerItems = document.querySelectorAll('section.words > .spin-container-two > div');
-	const jumbledWords = wordArray.sort((a, b) => 0.5 - Math.random());
+	const jumbledWords = [...wordArray].sort(() => 0.5 - Math.random());
 	const spinnerItems = [];
 	var spinnerItemsLength = largerSpinnerItems.length + smallerSpinnerItems.length;
 	jumbledWords.forEach(function(word, index) {
@@ -254,6 +249,11 @@ function listMode() {
   
 	  const wordContainer = document.createElement("div");
 	  wordContainer.classList.add('container-list-mode');
+
+	  const columnOne = document.createElement("div");
+	  columnOne.classList.add('column');
+	  const columnTwo = document.createElement("div");
+	  columnTwo.classList.add('column');
   
 	  wordSection.appendChild(wordContainer);
 	  wordSection.classList.add('section-list-mode')
@@ -264,9 +264,14 @@ function listMode() {
 		  newWordItem.ariaLabel = word.file;
 		  newWordItem.classList.add('word')
 		  newWordItem.classList.add('word-list-mode')
-  
-		  wordContainer.appendChild(newWordItem)
+		  newWordItem.classList.add(word.word.charAt(0));
+		  newWordItem.style.fontSize = '1.5rem';
+		  
+		  if(index < (wordArray.length / 2)) {columnOne.appendChild(newWordItem)}
+		  if(index > (wordArray.length / 2)) {columnTwo.appendChild(newWordItem)}
 	  })
+	  wordContainer.appendChild(columnOne);
+	  wordContainer.appendChild(columnTwo);
 }
 
 const listButton = document.querySelector('.words-viewing-mode');

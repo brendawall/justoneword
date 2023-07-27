@@ -12,6 +12,13 @@ body {
 
 button {font-family: inherit; cursor: pointer;}
 
+.disable-css-animations {
+    -webkit-animation: none !important;
+    -moz-animation: none !important;
+    -o-animation: none !important;
+    animation: none !important;
+}
+
 video::-webkit-media-controls {
     display: none;
 }
@@ -199,15 +206,19 @@ section.words.section-list-mode {
 }
 
 .container-list-mode {
+    display: flex;
     max-width: 80%;
+    gap: 2rem;
+}
+
+.container-list-mode > .column {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: .5rem;
 }
 
 .word-list-mode {
-    font-size: 1.75rem;
-    font-weight: 500;
+    font-size: 1.5rem;
+    font-weight: 300;
     transition: all 200ms ease;
 }
 
