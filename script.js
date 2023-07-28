@@ -111,11 +111,42 @@ const wordArray = [
 
 const randomWordSpan = document.querySelector('section.random-word-section > span')
 
+function typeWriterDouble(word, speed) {
+	const container = randomWordSpan;
+	let currentIndex = 0;
+	let isDeleting = false;
+  
+	function type() {
+	  const currentText = isDeleting
+		? word.substring(0, currentIndex - 1)
+		: word.substring(0, currentIndex + 1);
+  
+	  container.textContent = currentText;
+  
+	  if (!isDeleting) {
+		currentIndex++;
+	  } else {
+		currentIndex--;
+	  }
+  
+	  if (!isDeleting && currentIndex === word.length + 1) {
+		isDeleting = true;
+		setTimeout(type, 3000); // Wait for 1 second after writing before starting deletion
+	  } else if (isDeleting && currentIndex === 0) {
+		container.textContent = ""; // Clear the container after deletion is complete
+	  } else {
+		setTimeout(type, speed); // Adjust speed to control typing speed
+	  }
+	}
+  
+	type();
+  }
 setInterval(() => {
 	randomWordSpan.classList.add('word');
 	const randomIndex = Math.floor((Math.random() * wordArray.length));
-	randomWordSpan.textContent = wordArray[randomIndex].word;
-	randomWordSpan.ariaLabel = wordArray[randomIndex].file;
+	const randomWord = wordArray[Math.floor(Math.random() * wordArray.length)].word;
+	const randomWordArray = randomWord.split('');
+	 typeWriterDouble(randomWord, 50); // Example usage
 }, 5000);
 
 const lessSpeed = document.querySelector('button.less-speed');
