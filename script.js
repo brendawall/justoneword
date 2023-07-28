@@ -7,6 +7,11 @@ const observer = new IntersectionObserver((entries) => {
 		}
 	}))
 })
+
+// Parrelax Scrolling
+window.addEventListener('scroll', function() {
+	document.body.style.setProperty("background-position", `0% -${window.scrollY / 2}px`)
+});
   
 const hiddenElements = document.querySelectorAll('.hidden');
 hiddenElements.forEach((el) => observer.observe(el));
