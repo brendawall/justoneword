@@ -59,13 +59,17 @@ const skipButton = document.querySelector('.skip-animation')
 const hr = document.querySelector('.div-2')
 setTimeout(() => {hr.classList.add('active')}, 20000);
 
-skipButton.addEventListener("click", () => {
-	paragraph.textContent = ''
-	paragraph.textContent = originalText;
-	wordSection.classList.add('disable-css-animations')
-	wordSection.style.opacity = 1;
-	hr.classList.add('active')
-	paragraph.classList.add('overlay-in')
+window.addEventListener("DOMContentLoaded", () => {
+	skipButton.addEventListener("click", () => {
+		paragraph.textContent = ''
+		paragraph.textContent = originalText;
+		wordSection.style.opacity = 1;
+		wordSection.classList.add('disable-css-animations')
+		hr.classList.add('active')
+		paragraph.classList.add('overlay-in')
+
+		listWordItems.forEach(word => {word.style.animation = `blur-in forwards 1s ${Math.random() * 1}s ease`;});
+	})
 })
 
 typeWriter(paragraph, 4, 50, 15)
@@ -131,7 +135,7 @@ function typeWriterDouble(word, speed) {
   
 	  if (!isDeleting && currentIndex === word.length + 1) {
 		isDeleting = true;
-		setTimeout(type, 3000); // Wait for 1 second after writing before starting deletion
+		setTimeout(type, 5000); // Wait for 1 second after writing before starting deletion
 	  } else if (isDeleting && currentIndex === 0) {
 		container.textContent = ""; // Clear the container after deletion is complete
 	  } else {
@@ -140,14 +144,19 @@ function typeWriterDouble(word, speed) {
 	}
   
 	type();
-  }
-setInterval(() => {
+}
+
+function randomWordSection() {
 	randomWordSpan.classList.add('word');
 	const randomIndex = Math.floor((Math.random() * wordArray.length));
 	const randomWord = wordArray[Math.floor(Math.random() * wordArray.length)].word;
 	const randomWordArray = randomWord.split('');
-	 typeWriterDouble(randomWord, 50); // Example usage
-}, 5000);
+	typeWriterDouble(randomWord, 50);
+}
+
+randomWordSection();
+
+setInterval(() => {randomWordSection();}, 9000);
 
 const lessSpeed = document.querySelector('button.less-speed');
 const moreSpeed = document.querySelector('button.more-speed');
@@ -316,6 +325,8 @@ function listMode() {
 		  newWordItem.classList.add('word')
 		  newWordItem.classList.add('word-list-mode')
 		  newWordItem.style.fontSize = '1.5rem';
+		  newWordItem.style.opacity = '0'
+		  newWordItem.style.animation = `blur-in forwards 1s ${Math.random() * 1}s ease`;
 
 		  if(minWidth(750)) {newWordItem.style.fontSize = '2rem'}
 		  
@@ -369,6 +380,10 @@ if(maxWidth(800)) {
 		paragraph.classList.toggle('expanded')
 	})
 }
+
+// Word Container Code
+
+
   
   
   

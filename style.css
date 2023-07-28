@@ -40,6 +40,24 @@ video::-webkit-media-controls {
     padding-inline: 5rem;
 }
 
+.logo {
+    width: 80vw;
+    height: 20vw;
+    object-fit: cover;
+    background: black;
+    mix-blend-mode: multiply;
+    -webkit-mask-image: url(./icons/Logo.svg);
+    mask-image: url(./icons/logo.svg);
+
+    mask-size: contain;
+    mask-position: center center;
+    mask-repeat: no-repeat;
+
+    -webkit-mask-size: contain;
+    -webkit-mask-position: center center;
+    -webkit-mask-repeat: no-repeat;
+}
+
 .random-word-section {
     display: flex; 
     gap: 3rem;
@@ -68,39 +86,17 @@ video::-webkit-media-controls {
     animation: dissolve-in 1ms 4s linear forwards;
 }
 
-.logo {
-    width: 40vw;
-    height: 40vw;
-    max-width: 700px;
-    max-height: 700px;
-    object-fit: cover;
-    background: black;
-    mix-blend-mode: multiply;
-    -webkit-mask-image: url(./icons/Logo.svg);
-    mask-image: url(./icons/logo.png);
-
-    mask-size: contain;
-    mask-position: center center;
-    mask-repeat: no-repeat;
-
-    -webkit-mask-size: contain;
-    -webkit-mask-position: center center;
-    -webkit-mask-repeat: no-repeat;
-}
-
 .logo.animation-end {
     animation: 
-        forwards fade-to-black 3s ease,
-        forwards shrink 2s ease;
+        forwards fade-to-black 4s ease,
+        forwards shrink 3s 2s ease;
         ;
 }
 
 @keyframes shrink {
     100% {
-        width: 20vw;
-        height: 20vw;
-        max-width: 350px;
-        max-height: 350px;
+        width: 60vw;
+        height: 10vw;
     }
 }
 
@@ -247,7 +243,6 @@ section.words.section-list-mode {
     transition: all 200ms ease;
 }
 
-
 .word-list-mode:hover {
     cursor: pointer;
     transform: scale(1.2) translate(1rem, 0);
@@ -263,8 +258,7 @@ section.words.section-list-mode {
 
 @media (min-width: 750px) {
     .container-list-mode {gap: 20vw}
-    .word {font-size: 2.5rem; 
-    /* This is overwritten by javascript} */
+    .word {font-size: 2.5rem;}
 }
 
 @media (max-width: 800px) {
@@ -321,4 +315,9 @@ section.words.section-list-mode {
         -webkit-filter: brightness(0);
         filter: brightness(0);
     }
+}
+
+@keyframes blur-in {
+    0% {filter: blur(10px); opacity: 0;}
+    100% {filter: blur(0px); opacity: 1;}
 }
