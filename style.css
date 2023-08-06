@@ -7,7 +7,7 @@
 body {
     background: url(./Assets/parchment_seamless.jpg) repeat;
     background-attachment: fixed;
-    background-position: 0% 50%;
+    background-position: 0%;
     font-family: 'Crimson Pro', serif;
     overflow-x: hidden;
 }
@@ -40,6 +40,14 @@ video::-webkit-media-controls {
     place-items: center;
     margin: 1rem;
     padding-inline: 5rem;
+}
+
+.backdrop-filter {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background: rgba(255, 202, 141, 0.2);
+    backdrop-filter: blur(10px);
 }
 
 .logo {

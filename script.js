@@ -1,20 +1,7 @@
-const observer = new IntersectionObserver((entries) => {
-	entries.forEach((entry => {
-		console.log(entry)
-		if (entry.isIntersecting) {
-			entry.target.classList.add('show');
-			entry.target.classList.remove('hidden')
-		}
-	}))
-})
-
 // Parrelax Scrolling
 window.addEventListener('scroll', function() {
 	document.body.style.setProperty("background-position", `0% -${window.scrollY / 2}px`)
 });
-  
-const hiddenElements = document.querySelectorAll('.hidden');
-hiddenElements.forEach((el) => observer.observe(el));
 
 const logo = document.querySelector('.logo');
 logo.playbackRate = 3;
@@ -31,7 +18,7 @@ function typeWriter(text, speed, pause, random) {
 	const originalText = text.textContent;
 	const modifiedText = originalText.split('');
 	var randomSpeedArray = [];
-	const pauseArray = ['.','!','?',',']
+	const pauseArray = ['.','!','?',',','(',')']
 	let sum = 0;
 	
 	text.textContent = ''
@@ -77,7 +64,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	})
 })
 
-typeWriter(paragraph, 4, 50, 15)
+typeWriter(paragraph, 2, 100, 25)
 
 // True = Spinning, False = List View
 var viewingMode = true;
@@ -386,7 +373,33 @@ if(maxWidth(800)) {
 	})
 }
 
-// Word Container Code
+function minmax(inputValue, sourceMin, sourceMax, targetMin, targetMax) {
+    inputValue = Math.max(sourceMin, Math.min(sourceMax, inputValue));
+    const normalizedValue = (inputValue - sourceMin) / (sourceMax - sourceMin);
+    const mappedValue = (normalizedValue * (targetMax - targetMin)) + targetMin;
+    return mappedValue;
+}
+
+// Word Container Code //
+
+// Auto Fit // 
+function autoFit() {
+	const autoFitArray = document.querySelectorAll('.auto-fit');
+	autoFitArray.forEach(text => {
+	let maxLength = 250;
+	let minFontSize = 1.125;
+	let maxFontSize = 2;
+
+	const fontSize = Math.max(
+		minFontSize,
+		Math.min(maxFontSize, maxFontSize - ((text.textContent.length - maxLength) / maxLength))
+	);
+
+	text.style.fontSize = fontSize + 'rem';
+	});
+}
+
+autoFit();
 
 
   
