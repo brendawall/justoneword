@@ -50,12 +50,17 @@ video::-webkit-media-controls {
     backdrop-filter: blur(10px);
 }
 
+.title-section {
+    background: url(./Assets/parchment_seamless.jpg) repeat;
+    background-attachment: fixed;
+    background-position: 0%;
+}
+
 .logo {
     width: 80vw;
     height: 20vw;
-    object-fit: cover;
-    background: black;
     mix-blend-mode: multiply;
+    object-fit: cover;
     -webkit-mask-image: url(./icons/Logo.svg);
     mask-image: url(./icons/logo.svg);
 

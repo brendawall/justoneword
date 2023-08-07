@@ -2,10 +2,13 @@
     --padding: 1.125rem;
 }
 
+.unscrollable {overflow: hidden;}
+
 .insight-panel {
     position: fixed;
     inset: 2.5rem;
     border-radius: var(--padding);
+    box-shadow: inset 0 0 2em rgba(255, 136, 0, 0.281);
     border: 2px solid #FFF;
     background: #EFD4A9;
     z-index: 100;
@@ -15,6 +18,21 @@
     display: flex;
     gap: var(--padding);
     overflow: auto;
+}
+
+.insight-panel::-webkit-scrollbar, .par::-webkit-scrollbar {
+    width: 3vw;
+}
+
+.insight-panel::-webkit-scrollbar-track, .par::-webkit-scrollbar-track {
+    border-radius: var(--padding);
+    box-shadow: inset 0 0 .2rem rgba(0, 0, 0, 0.2);
+}
+
+.insight-panel::-webkit-scrollbar-thumb, .par::-webkit-scrollbar-thumb{
+    height: 10px;
+    border-radius: var(--padding);
+    background: rgba(255, 255, 255, 0.5)
 }
 
 .insight-panel > div {
@@ -37,7 +55,7 @@
 }
 
 .raw > .word > h1 {
-    font-size: 9rem;
+    font-size: 10rem;
     font-weight: 400;
     margin-top: -0.1em;
 }
@@ -109,6 +127,7 @@
     text-decoration: underline;
     cursor: pointer;
     color: black;
+    margin-top: auto;
     font-size: 1.5rem;
     font-weight: 600;
 }
@@ -143,18 +162,17 @@
 
 .image {
     z-index: 4;
-    transform: translate(-25%, -10%);
-    height: 100%;
+    transform: translate(-30%, -10%);
+    object-fit: contain;
     width: 60%;
-    object-fit: cover;
     background: rgb(240, 182, 128);
     mask-image: url(./Assets/image-mask.png);
     mask-size: contain;
-    mask-position: -2rem 0;
+    mask-position: 2rem 2rem;
     mask-repeat: no-repeat;
     -webkit-mask-image: url(./Assets/image-mask.png);
-    -webkit-mask-size: 110%;
-    -webkit-mask-position: -2rem 0;
+    -webkit-mask-size: 90%;
+    -webkit-mask-position: center;
     -webkit-mask-repeat: no-repeat;
 }
 
@@ -163,6 +181,8 @@
     inset: 0;
     background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/William_wilberforce.jpg/640px-William_wilberforce.jpg');
     background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
     filter: blur(10px) brightness(0.3) saturate(2);
     transform: scale(1.2);
     z-index: 1;
@@ -229,16 +249,30 @@
 
 @media (max-width: 1600px) {
     .insight-panel > .generated {width: 40%}
-    .generated > .wiki > .info-text {font-size: 1.125rem;}
+    .generated > .wiki > .title {font-size: 2.5rem;}
 }
 
-@media (max-width: 1300px) {
-    .raw > .word > h1 {font-size: 5rem;}
+@media (max-width: 1350px) {
+    .raw > .word > h1 {font-size: 8rem;}
     .insight-panel > .generated {width: 50%}
 }
 
+@media (max-width: 1050px) {
+    .generated > .wiki > .title {font-size: 2.125rem;}
+    .generated > .wiki > .continue-reading > a {font-size: 2rem;}
+    .generated > .wiki > .info-text {font-size: 1.125rem; top: calc(2rem + 7.5%)}
+    .generated > .bible > .verse {font-size: 2.125rem;}
+    .generated > .bible > .text {font-size: 1.125rem;}
+}
+
+@media (max-width: 900px) {
+    .generated > .wiki > .image {transform: translate(-25%, 5%);}
+    .generated > .wiki > .title {top: 1rem; right: unset; font-size: 2.5rem; width: 90%;}
+    .generated > .wiki > .info-text {top: calc(2rem + 12.5%);}
+}
+
 @media (max-width: 1200px) {
-    .raw > .word > h1 {font-size: 12vw;}
+    .raw > .word > h1 {font-size: 15vw;}
     .insight-panel {
         flex-direction: column;
         inset: 2.5rem;
@@ -257,7 +291,7 @@
     .generated > .bible {height: 40vh}
 }
 
-@media (max-width: 700px) {
+@media (max-width: 850px) {
     .insight-panel {inset: 1.125rem}
     .generated {height: fit-content}
     :root {
@@ -270,5 +304,54 @@
         width: 100%;
         height: 40vh;
     }
+    .generated > .bible {height: fit-content;}
     .raw > .par {height: 100%;}
+    .generated > .wiki {
+        height: 37vh;
+    }
+    .generated > .wiki > .image {
+        transform: none;
+        transform: translateX(-10%);
+        height: 120%;
+        aspect-ratio: 1;
+        -webkit-mask-size: 80%;
+        -webkit-mask-position-y: center;
+    }
+    .generated > .wiki > .title {
+        font-size: 3rem;
+    }
+    .generated > .wiki > .continue-reading {
+        width: fit-content;
+        gap: var(--padding);
+        left: unset; 
+        right: var(--padding);
+        justify-content: space-around;
+    }
+}
+
+@media (max-width: 600px) {
+    .generated > .wiki > .title {font-size: 2.8rem;}
+}
+
+@media (max-width: 500px) {
+    .raw > .listen {gap: .5rem}
+    .raw > .listen > button {font-size: 2rem;}
+    .raw > .listen > svg {width: 2em;}
+    .generated > .wiki > .image {transform: translateX(-20%)}
+    .generated > .wiki > .title {font-size: 2.125rem; width: 95%; text-align: center;}
+    .generated > .wiki > .continue-reading {
+        width: 90%;
+        right: unset;
+        gap: 1rem;
+        display: flex;
+        justify-content: center;
+    }
+}
+
+@media(max-width: 400px) {
+    .generated > .wiki > .title {font-size: 2.125rem; width: 95%; text-align: center;}
+    .generated > .wiki > .info-text {font-size: 1rem;}
+    .generated > .wiki > .continue-reading > a {font-size: 1.5rem;}
+    .generated > .bible > .verse {font-size: 1.75rem; font-weight: 600;}
+    .generated > .bible > .translation {font-size: 1.5rem; top: .8rem;}
 }

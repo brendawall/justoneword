@@ -390,6 +390,16 @@ function autoFit() {
 	let minFontSize = 1.125;
 	let maxFontSize = 2;
 
+	if(maxWidth(1050)) {
+		minFontSize = 1;
+		maxFontSize = 1.5;
+	}
+
+	if(maxWidth(400)) {
+		minFontSize = 0.9;
+		maxFontSize = 1.125;
+	}
+
 	const fontSize = Math.max(
 		minFontSize,
 		Math.min(maxFontSize, maxFontSize - ((text.textContent.length - maxLength) / maxLength))
@@ -400,6 +410,8 @@ function autoFit() {
 }
 
 autoFit();
+
+
 
 
   
