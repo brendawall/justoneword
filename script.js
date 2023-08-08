@@ -16,6 +16,7 @@ wordSection.style.animation = 'dissolve-in 1s 20s ease forwards'
 
 function typeWriter(text, speed, pause, random) {
 	const originalText = text.textContent;
+	text.textContent = '';
 	const modifiedText = originalText.split('');
 	var randomSpeedArray = [];
 	const pauseArray = ['.','!','?',',','(',')']
@@ -60,7 +61,9 @@ window.addEventListener("DOMContentLoaded", () => {
 		hr.classList.add('active')
 		paragraph.classList.add('overlay-in')
 
-		listWordItems.forEach(word => {word.style.animation = `blur-in forwards 1s ${Math.random() * 1}s ease`;});
+		if(!viewingMode) {
+			listWordItems.forEach(word => {word.style.animation = `blur-in forwards 1s ${Math.random() * 1}s ease`;});
+		}
 	})
 })
 
@@ -141,8 +144,9 @@ function typeWriterDouble(word, speed) {
 function randomWordSection() {
 	randomWordSpan.classList.add('word');
 	const randomIndex = Math.floor((Math.random() * wordArray.length));
-	const randomWord = wordArray[Math.floor(Math.random() * wordArray.length)].word;
-	const randomWordArray = randomWord.split('');
+	const randomWord = wordArray[randomIndex].word;
+	randomWordSpan.setAttribute("id", "word")
+	randomWordSpan.ariaLabel = wordArray[randomIndex].file;
 	typeWriterDouble(randomWord, 50);
 }
 
@@ -170,25 +174,6 @@ moreSpeed.addEventListener("click", () => {
 	moreSpeed.style.transform = 'scale(1.2)'
 	setTimeout(() => {moreSpeed.style.transform = 'scale(1)'}, 100);
 });
-
-async function getTextContent(filePath) {
-  try {
-    const response = await fetch(filePath);
-    if (!response.ok) {
-      throw new Error('Failed to fetch the file.');
-    }
-    const textContent = await response.text();
-    return textContent;
-  } catch (error) {
-    console.error(`Error reading file: ${error}`);
-    return '';
-  }
-}
-
-async function logTextContent(filePath) {
-  const item = await getTextContent(filePath);
-  console.log(item);
-}
 
 var speedOfRotation = 1.25;
 var minFontSize = 1.25;
@@ -256,6 +241,7 @@ function appendRandomWord() {
 	jumbledWords.forEach(function(word, index) {
 
 		const newWordItem = document.createElement("span");
+		newWordItem.setAttribute("id", "word")
 
 		if (index < largerSpinnerItems.length) {
 			newWordItem.style.opacity = Math.random() / 2 + 0.6;
@@ -315,6 +301,7 @@ function listMode() {
 		  newWordItem.textContent = word.word;
 		  newWordItem.ariaLabel = word.file;
 		  newWordItem.classList.add('word')
+		  newWordItem.setAttribute("id", "word")
 		  newWordItem.classList.add('word-list-mode')
 		  newWordItem.style.fontSize = '1.5rem';
 		  newWordItem.style.opacity = '0'
@@ -386,9 +373,15 @@ function minmax(inputValue, sourceMin, sourceMax, targetMin, targetMax) {
 function autoFit() {
 	const autoFitArray = document.querySelectorAll('.auto-fit');
 	autoFitArray.forEach(text => {
-	let maxLength = 250;
+	let maxLength = 1250;
 	let minFontSize = 1.125;
-	let maxFontSize = 2;
+	let maxFontSize = 1.5;
+
+	if(text.parentElement = document.querySelector('#bible')) {
+		maxLength = 500;
+		minFontSize = 1.5;
+		maxFontSize = 2;
+	}
 
 	if(maxWidth(1050)) {
 		minFontSize = 1;
@@ -410,6 +403,192 @@ function autoFit() {
 }
 
 autoFit();
+
+function renderTextFile(fileName, destination) {
+	// Construct the URL of the text file on the server
+	const fileURL = `./word-text-form/${fileName}.txt`;
+  
+	// Fetch the text file from the server
+	fetch(fileURL)
+	  .then((response) => {
+		if (!response.ok) {
+		  throw new Error('Failed to fetch the text file.');
+		}
+		return response.text();
+	  })
+	  .then((fileContent) => {
+		// Update the textContent of the destination DOM element
+		destination.textContent = fileContent;
+	  })
+	  .catch((error) => {
+		console.error('Error fetching the text file:', error);
+	  });
+}
+
+function isNumber(string) {
+	return /^[-+]?\d+(\.\d+)?$/.test(string);
+}
+
+function isLowerCase(str) {
+    return str === str.toLowerCase() &&
+           str !== str.toUpperCase();
+}
+
+function toStringAdvanced(array, separator = '') {
+	return array
+	  .filter(element => {
+		return element !== null && element !== undefined;
+	  })
+	  .join(separator);
+}
+
+function wrapStringWithSpan(paragraphClass, searchString) {
+	const paragraph = document.querySelector(paragraphClass);
+	const regex = new RegExp(searchString, 'gi');
+	const text = paragraph.textContent;
+	const matches = text.match(regex);
+
+	if (matches) {
+		const fragment = document.createDocumentFragment();
+		let lastIndex = 0;
+
+		matches.forEach(match => {
+			const startIndex = text.indexOf(match, lastIndex);
+			const endIndex = startIndex + match.length;
+			const beforeText = text.slice(lastIndex, startIndex);
+			const matchedText = text.slice(startIndex, endIndex);
+
+			if (beforeText) {
+				fragment.appendChild(document.createTextNode(beforeText));
+			}
+
+			const span = document.createElement('a');
+			span.href = '#bible'
+			span.style.fontWeight = '600';
+			span.style.color = 'black'
+			span.classList.add('bible-reference')
+			span.textContent = matchedText;
+			fragment.appendChild(span);
+
+			const halfConvertedLabel = matchedText.split(' ');
+			const convertedLabel = toStringAdvanced(halfConvertedLabel, '+')
+
+			span.ariaLabel = convertedLabel.toLowerCase();
+
+			lastIndex = endIndex;
+		});
+
+		if (lastIndex < text.length) {
+			fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
+		}
+
+		paragraph.textContent = '';
+		paragraph.appendChild(fragment);
+	}
+}
+
+document.body.addEventListener("click", (event) => {
+	const raw = document.querySelector('.raw');
+	const generated = document.querySelector('.generated');
+	const title = document.querySelector('.title-of-word');
+	const listen = document.querySelector('.listen');
+	const paragraph = document.querySelector('.par');
+	const bible = document.querySelector('.bible');
+	const bibleTranslation = document.querySelector('.translation');
+	const bibleVerse = document.querySelector('.verse');
+	const bibleText = document.querySelector('.bible > .text');
+	const readFull = document.querySelector('.read-full');
+	const wiki = document.querySelector('.wiki');
+	const wikiTitle = document.querySelector('.wiki > .title');
+	const wikiImage = document.querySelector('.wiki > .image');
+	const wikiText = document.querySelector('.wiki > .info-text');
+	const continueReading = document.querySelector('.continue-reading');
+	const wikiBackground = document.querySelector('.bg-blur');
+
+    if (event.target.matches('#word')) {
+		let object;
+        if((event.target.classList.contains('random-word')) || !viewingMode) {
+			object = event.target;
+		} else {
+			object = event.target.parentElement
+		}
+	const wordInsightPanel = document.querySelector('.insight-panel');
+	const backgroundOverlay = document.querySelector('.background-overlay');
+	const returnToWords = document.querySelector('.return-to-words')
+	wordInsightPanel.classList.remove('hidden');
+	backgroundOverlay.classList.remove('hidden');
+	returnToWords.addEventListener("click", () => {
+		wordInsightPanel.classList.add('hidden');
+		backgroundOverlay.classList.add('hidden');
+	})
+
+	let label = object.ariaLabel;
+	let word = wordArray.find(({file}) => file === label)
+	title.textContent = word.word;
+	renderTextFile(word.file, paragraph);
+	setTimeout(() => {
+		const text = paragraph.textContent;
+		const versePattern = /([A-Za-z]+\s\d+:\d+(?:-\d+)?)/g;
+  		const matches = text.match(versePattern);
+		matches.forEach(match => {
+			wrapStringWithSpan('.par', match)
+		})
+		const bibleReferences = document.querySelectorAll('.bible-reference');
+		bibleReferences.forEach(reference => {
+			reference.addEventListener("click", () => {
+				bible.classList.remove('hidden')
+				url = `https://bible-api.com/${reference.ariaLabel}?translation=kjv`;
+
+				fetchWebpageContent(url)
+					.then((content) => {
+					if (content) {
+						var parsedData = JSON.parse(content);
+
+						const reference = parsedData.reference;
+						const translation = parsedData.translation_name;
+						const shortTranslationArray = [];
+						translation.split('').forEach(char => {
+							if(!isLowerCase(char) && char!= ' ') {
+								shortTranslationArray.push(char)
+							}
+						})
+						const shortTranslation = toStringAdvanced(shortTranslationArray, '.')
+
+						const text = parsedData.text;
+					
+						bibleVerse.textContent = reference;
+						bibleTranslation.textContent = shortTranslation;
+						bibleText.textContent = text;
+				
+					} else {
+						console.log('Failed to fetch the webpage.');
+					}
+					})
+			})
+		})
+
+		async function fetchWebpageContent(url) {
+			try {
+			const response = await fetch(url);
+		
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+		
+			const content = await response.text();
+			return content;
+			} catch (error) {
+			console.error('Error fetching the webpage:', error.message);
+			return null;
+			}
+		}
+	}, 500);
+    }
+});
+
+
+
+
 
 
 

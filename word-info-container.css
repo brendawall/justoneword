@@ -6,9 +6,9 @@
 
 .insight-panel {
     position: fixed;
+    scroll-behavior: smooth;
     inset: 2.5rem;
     border-radius: var(--padding);
-    box-shadow: inset 0 0 2em rgba(255, 136, 0, 0.281);
     border: 2px solid #FFF;
     background: #EFD4A9;
     z-index: 100;
@@ -20,22 +20,31 @@
     overflow: auto;
 }
 
-.insight-panel::-webkit-scrollbar, .par::-webkit-scrollbar {
-    width: 3vw;
+.padding-bottom {
+    left: 0;
+    right: 0;
+    background: transparent;
+    white-space: pre;
+    height: 20vh;
+    opacity: 0;
 }
 
-.insight-panel::-webkit-scrollbar-track, .par::-webkit-scrollbar-track {
+.insight-panel::-webkit-scrollbar, .par::-webkit-scrollbar, .text::-webkit-scrollbar {
+    width: 1em;
+}
+
+.insight-panel::-webkit-scrollbar-track, .par::-webkit-scrollbar-track, .text::-webkit-scrollbar-track {
     border-radius: var(--padding);
     box-shadow: inset 0 0 .2rem rgba(0, 0, 0, 0.2);
 }
 
-.insight-panel::-webkit-scrollbar-thumb, .par::-webkit-scrollbar-thumb{
+.insight-panel::-webkit-scrollbar-thumb, .par::-webkit-scrollbar-thumb, .text::-webkit-scrollbar-thumb{
     height: 10px;
     border-radius: var(--padding);
     background: rgba(255, 255, 255, 0.5)
 }
 
-.insight-panel > div {
+.insight-panel > .default-styling {
     display: flex;
     flex-direction: column;
     width: 35%;
@@ -47,7 +56,7 @@
 }
 
 .insight-panel > .raw {
-    width: 65%;
+    width: 90vw;
 }
 
 .insight-panel > div > div:not(.par) {
@@ -102,11 +111,7 @@
 
 .generated > .bible {
     gap: var(--padding);
-    height: fit-content;
-}
-
-.generated > .bible > div:not(.translation) {
-    border-radius: var(--padding);
+    transition: all 1s ease;
 }
 
 .verse {
@@ -117,9 +122,10 @@
 }
 
 .text {
-    width: 100%;
     text-align: left;
     font-weight: 200;
+    max-height: 40vh;
+    overflow: auto;
 }
 
 .read-full {
@@ -127,18 +133,17 @@
     text-decoration: underline;
     cursor: pointer;
     color: black;
-    margin-top: auto;
     font-size: 1.5rem;
     font-weight: 600;
 }
 
 .translation {
-    font-size: 2rem;
+    font-size: 2.5rem;
     position: absolute;
     right: var(--padding);
     top: 1.2rem;
-    height: 12%;
-    width: 15%;
+    width: 20%;
+    white-space: nowrap;
     text-align: right;
     border-radius: var(--padding);
     font-weight: 200;
@@ -146,6 +151,7 @@
 
 .wiki {
     overflow: hidden;
+    max-height: 400px;
     height: fit-content;
     border-radius: var(--padding);
     background: transparent;
@@ -221,9 +227,9 @@
 .continue-reading {
     display: flex;
     justify-content: space-evenly;
-    left: 5%;
+    left: 15%;
     bottom: var(--padding);
-    width: 90%;
+    width: 70%;
     height: 12.5%;
 }
 
@@ -242,6 +248,36 @@
     background: rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
     z-index: 50;
+}
+
+.return-to-words {
+    position: fixed;
+    bottom: calc(2.5rem + 2px);
+    left: calc(2.6rem + 2px);
+    right: calc(2.6rem + 2.1em + 1.5px);
+    border-radius: 1.125rem;
+    height: 4em;
+    padding-bottom: 1em;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    background: #EFD4A9;
+    box-shadow: 0 -1em 10px #EFD4A9;
+}
+
+.return-to-words > svg {
+    height: 1.5em;
+    transform: translateY(.3em)
+}
+
+.return-to-words > span {
+    white-space: nowrap;
+    font-size: 2.5rem; 
+    color: rgba(0, 0, 0, 0.75); 
+    font-weight: 500;
+    cursor: pointer
 }
 
 .hidden {display: none !important}
@@ -271,6 +307,18 @@
     .generated > .wiki > .info-text {top: calc(2rem + 12.5%);}
 }
 
+@media (min-width: 1201px) {
+    .padding-bottom {display: none}
+    .insight-panel > .generated {height: 90%}
+    .return-to-words {
+        box-shadow: none;
+        width: 20%;
+        bottom: 3.5rem;
+        left: unset;
+        right: calc(4rem + 1.5px);
+    }
+}
+
 @media (max-width: 1200px) {
     .raw > .word > h1 {font-size: 15vw;}
     .insight-panel {
@@ -289,11 +337,18 @@
         height: 40vh;
     }
     .generated > .bible {height: 40vh}
+    .generated > .bible > .read-full {margin-top: auto}
 }
 
 @media (max-width: 850px) {
     .insight-panel {inset: 1.125rem}
     .generated {height: fit-content}
+    .return-to-words {
+        bottom: calc(1.125rem + 2px);
+        right: calc(1.125rem + 2px);
+        left: calc(1.125rem + 2px);
+        border-radius: var(--padding);
+    }
     :root {
         --padding: .75rem;
     }
@@ -349,7 +404,8 @@
 }
 
 @media(max-width: 400px) {
-    .generated > .wiki > .title {font-size: 2.125rem; width: 95%; text-align: center;}
+    .return-to-words > span {font-size: 2rem;}
+    .generated > .wiki > .title {font-size: 2rem; width: 95%; text-align: center;}
     .generated > .wiki > .info-text {font-size: 1rem;}
     .generated > .wiki > .continue-reading > a {font-size: 1.5rem;}
     .generated > .bible > .verse {font-size: 1.75rem; font-weight: 600;}

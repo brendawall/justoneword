@@ -10,6 +10,7 @@ body {
     background-position: 0%;
     font-family: 'Crimson Pro', serif;
     overflow-x: hidden;
+    scroll-behavior: smooth;
 }
 
 button {font-family: inherit; cursor: pointer;}
