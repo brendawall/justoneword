@@ -443,48 +443,30 @@ function toStringAdvanced(array, separator = '') {
 }
 
 function wrapStringWithSpan(paragraphClass, searchString) {
-	const paragraph = document.querySelector(paragraphClass);
-	const regex = new RegExp(searchString, 'gi');
-	const text = paragraph.textContent;
-	const matches = text.match(regex);
+    const paragraphs = document.querySelectorAll(paragraphClass);
 
-	if (matches) {
-		const fragment = document.createDocumentFragment();
-		let lastIndex = 0;
+    paragraphs.forEach(paragraph => {
+        const regex = new RegExp(searchString, 'gi');
+        const text = paragraph.textContent;
+        const matches = text.match(regex);
 
-		matches.forEach(match => {
-			const startIndex = text.indexOf(match, lastIndex);
-			const endIndex = startIndex + match.length;
-			const beforeText = text.slice(lastIndex, startIndex);
-			const matchedText = text.slice(startIndex, endIndex);
+        if (matches) {
+            matches.forEach(match => {
+                const span = document.createElement('span');
+                span.style.fontWeight = '600';
+                span.style.color = 'black';
+                span.classList.add('bible-reference');
+                span.textContent = match;
+                span.href = '#bible';
+                const halfConvertedLabel = match.split(' ');
+                const convertedLabel = toStringAdvanced(halfConvertedLabel, '+');
+                span.setAttribute('aria-label', convertedLabel.toLowerCase());
 
-			if (beforeText) {
-				fragment.appendChild(document.createTextNode(beforeText));
-			}
-
-			const span = document.createElement('a');
-			span.href = '#bible'
-			span.style.fontWeight = '600';
-			span.style.color = 'black'
-			span.classList.add('bible-reference')
-			span.textContent = matchedText;
-			fragment.appendChild(span);
-
-			const halfConvertedLabel = matchedText.split(' ');
-			const convertedLabel = toStringAdvanced(halfConvertedLabel, '+')
-
-			span.ariaLabel = convertedLabel.toLowerCase();
-
-			lastIndex = endIndex;
-		});
-
-		if (lastIndex < text.length) {
-			fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
-		}
-
-		paragraph.textContent = '';
-		paragraph.appendChild(fragment);
-	}
+                // Replace the matched text with the span
+                paragraph.innerHTML = paragraph.innerHTML.replace(match, span.outerHTML);
+            });
+        }
+    });
 }
 
 document.body.addEventListener("click", (event) => {
@@ -519,6 +501,7 @@ document.body.addEventListener("click", (event) => {
 	backgroundOverlay.classList.remove('hidden');
 	returnToWords.addEventListener("click", () => {
 		wordInsightPanel.classList.add('hidden');
+		bible.classList.add('hidden')
 		backgroundOverlay.classList.add('hidden');
 	})
 
@@ -528,15 +511,23 @@ document.body.addEventListener("click", (event) => {
 	renderTextFile(word.file, paragraph);
 	setTimeout(() => {
 		const text = paragraph.textContent;
-		const versePattern = /([A-Za-z]+\s\d+:\d+(?:-\d+)?)/g;
-  		const matches = text.match(versePattern);
-		matches.forEach(match => {
-			wrapStringWithSpan('.par', match)
-		})
+		const versePattern = /\b(?:[A-Za-z]+\s\d+:\d+(?:-\d+)?)|(?:\d+\s[A-Za-z]+\s\d+:\d+(?:-\d+)?)\b/g;
+		const matches = text.match(versePattern);
+		if (matches) {
+			matches.forEach(match => {
+				wrapStringWithSpan('.par', match);
+			});
+		}
 		const bibleReferences = document.querySelectorAll('.bible-reference');
 		bibleReferences.forEach(reference => {
 			reference.addEventListener("click", () => {
 				bible.classList.remove('hidden')
+
+				urlFormat = String(reference.ariaLabel).replace(/:\d+/g, '');
+				console.log(urlFormat)
+				readFull.href = `https://www.biblegateway.com/passage/?search=${urlFormat}&version=NRSV`;
+				readFull.target = '_blank'
+				readFull.rel = 'noopener noreferrer'
 				url = `https://bible-api.com/${reference.ariaLabel}?translation=kjv`;
 
 				fetchWebpageContent(url)
@@ -561,7 +552,7 @@ document.body.addEventListener("click", (event) => {
 						bibleText.textContent = text;
 				
 					} else {
-						console.log('Failed to fetch the webpage.');
+						console.log('Failed to fetch the text');
 					}
 					})
 			})
