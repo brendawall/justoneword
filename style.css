@@ -26,6 +26,10 @@ video::-webkit-media-controls {
     display: none;
 }
 
+audio {display: none}
+
+.wait {opacity: 0; pointer-events: none;}
+
 .hidden {
     opacity: 0; 
     transform: translate(-10%, -1%) scale(.4);

@@ -469,11 +469,22 @@ function wrapStringWithSpan(paragraphClass, searchString) {
     });
 }
 
+const audioRange = document.querySelector(".listen > .listen-controls > input");
+
+function audioRangeInterval(audio) {
+	setTimeout(() => {
+		audio.play();
+		intervalID = setInterval(() => {
+			audioRange.value = Math.floor((audio.currentTime / audio.duration) * audioRange.max);
+		}, 50);
+	}, 200);
+}
+
 document.body.addEventListener("click", (event) => {
 	const raw = document.querySelector('.raw');
 	const generated = document.querySelector('.generated');
 	const title = document.querySelector('.title-of-word');
-	const listen = document.querySelector('.listen');
+	const listen = document.querySelector('.listen > button');
 	const paragraph = document.querySelector('.par');
 	const bible = document.querySelector('.bible');
 	const bibleTranslation = document.querySelector('.translation');
@@ -494,12 +505,31 @@ document.body.addEventListener("click", (event) => {
 		} else {
 			object = event.target.parentElement
 		}
+
+	// Listen Logic
+	const audio = document.querySelector("audio");
+	let intervalID;
+
+	listen.addEventListener("click", () => {
+		audio.src = `./audio-exports/${object.ariaLabel}.mp3`
+		audio.load();
+		audioRangeInterval(audio);
+	})
+
+	audioRange.addEventListener("input", () => {
+		audio.pause();
+		clearInterval(intervalID)
+		audio.currentTime = (audioRange.value / audioRange.max) * audio.duration;
+		audioRangeInterval(audio);
+	})
+
 	const wordInsightPanel = document.querySelector('.insight-panel');
 	const backgroundOverlay = document.querySelector('.background-overlay');
 	const returnToWords = document.querySelector('.return-to-words')
 	wordInsightPanel.classList.remove('hidden');
 	backgroundOverlay.classList.remove('hidden');
 	returnToWords.addEventListener("click", () => {
+		audio.src = ''
 		wordInsightPanel.classList.add('hidden');
 		bible.classList.add('hidden')
 		backgroundOverlay.classList.add('hidden');
@@ -517,6 +547,7 @@ document.body.addEventListener("click", (event) => {
 			matches.forEach(match => {
 				wrapStringWithSpan('.par', match);
 			});
+			loadingArray();
 		}
 		const bibleReferences = document.querySelectorAll('.bible-reference');
 		bibleReferences.forEach(reference => {
@@ -524,7 +555,6 @@ document.body.addEventListener("click", (event) => {
 				bible.classList.remove('hidden')
 
 				urlFormat = String(reference.ariaLabel).replace(/:\d+/g, '');
-				console.log(urlFormat)
 				readFull.href = `https://www.biblegateway.com/passage/?search=${urlFormat}&version=NRSV`;
 				readFull.target = '_blank'
 				readFull.rel = 'noopener noreferrer'
@@ -574,8 +604,38 @@ document.body.addEventListener("click", (event) => {
 			}
 		}
 	}, 500);
-    }
+	}
 });
+
+function loadingArray() {
+	// Add Loading Animation
+	const loadingArray = document.querySelectorAll('.needs-buffer');
+	const notSpinner = document.querySelectorAll('.par > *:not(.spinner)');
+
+	loadingArray.forEach(container => {
+	  const loadingIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+	  loadingIcon.setAttribute('class', 'spinner');
+	  loadingIcon.setAttribute('viewBox', '0 0 50 50');
+	  
+	  const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+	  circle.setAttribute('class', 'path');
+	  circle.setAttribute('cx', '25');
+	  circle.setAttribute('cy', '25');
+	  circle.setAttribute('r', '20');
+	  circle.setAttribute('fill', 'none');
+	  circle.setAttribute('stroke-width', '5');
+	  
+	  loadingIcon.appendChild(circle);
+	  container.appendChild(loadingIcon);
+	});
+	notSpinner.forEach(element => {
+		element.classList.add('wait')
+		setTimeout(() => {
+			element.classList.remove('wait')
+		}, 1000);
+	})
+}
+
 
 
 
