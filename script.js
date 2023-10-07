@@ -480,11 +480,29 @@ function audioRangeInterval(audio) {
 	}, 200);
 }
 
+function play(audio, svg) {
+	audio.play();
+	svg.src = `./icons/pause.svg`
+	listenCount++
+}
+
+function pause(audio, svg) {
+	audio.pause();
+	svg.src = `./icons/play.svg`
+	listenCount++
+}
+
+
+let listenCount = 0;
+let intervalID;
+
 document.body.addEventListener("click", (event) => {
 	const raw = document.querySelector('.raw');
 	const generated = document.querySelector('.generated');
 	const title = document.querySelector('.title-of-word');
-	const listen = document.querySelector('.listen > button');
+	const listenInitial = document.querySelector('.listen > .text');
+	const listenButton = document.querySelector('.listen > .listen-controls > button');
+	const listenButtonImage = document.querySelector('.listen > .listen-controls > button > img')
 	const paragraph = document.querySelector('.par');
 	const bible = document.querySelector('.bible');
 	const bibleTranslation = document.querySelector('.translation');
@@ -507,13 +525,23 @@ document.body.addEventListener("click", (event) => {
 		}
 
 	// Listen Logic
-	const audio = document.querySelector("audio");
-	let intervalID;
+	const audio = document.createElement("audio");
 
-	listen.addEventListener("click", () => {
-		audio.src = `./audio-exports/${object.ariaLabel}.mp3`
-		audio.load();
-		audioRangeInterval(audio);
+	listenInitial.addEventListener("click", () => {
+		listenButton.parentElement.classList.remove('hidden');
+		play(audio, listenButtonImage)
+	})
+
+	audio.src = `./audio-exports/${object.ariaLabel}.mp3`
+	console.log(object.ariaLabel)
+
+	listenButton.addEventListener("click", () => {
+		console.log(listenCount)
+		if(listenCount % 2 == 0) {
+			play(audio, listenButtonImage)
+		} else if (listenCount == 2 || listenCount % 2 == 1) {
+			pause(audio, listenButtonImage)
+		}
 	})
 
 	audioRange.addEventListener("input", () => {
@@ -533,6 +561,8 @@ document.body.addEventListener("click", (event) => {
 		wordInsightPanel.classList.add('hidden');
 		bible.classList.add('hidden')
 		backgroundOverlay.classList.add('hidden');
+		listenCount = 0;
+		audio.remove();
 	})
 
 	let label = object.ariaLabel;
@@ -547,7 +577,6 @@ document.body.addEventListener("click", (event) => {
 			matches.forEach(match => {
 				wrapStringWithSpan('.par', match);
 			});
-			loadingArray();
 		}
 		const bibleReferences = document.querySelectorAll('.bible-reference');
 		bibleReferences.forEach(reference => {
@@ -606,35 +635,6 @@ document.body.addEventListener("click", (event) => {
 	}, 500);
 	}
 });
-
-function loadingArray() {
-	// Add Loading Animation
-	const loadingArray = document.querySelectorAll('.needs-buffer');
-	const notSpinner = document.querySelectorAll('.par > *:not(.spinner)');
-
-	loadingArray.forEach(container => {
-	  const loadingIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-	  loadingIcon.setAttribute('class', 'spinner');
-	  loadingIcon.setAttribute('viewBox', '0 0 50 50');
-	  
-	  const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-	  circle.setAttribute('class', 'path');
-	  circle.setAttribute('cx', '25');
-	  circle.setAttribute('cy', '25');
-	  circle.setAttribute('r', '20');
-	  circle.setAttribute('fill', 'none');
-	  circle.setAttribute('stroke-width', '5');
-	  
-	  loadingIcon.appendChild(circle);
-	  container.appendChild(loadingIcon);
-	});
-	notSpinner.forEach(element => {
-		element.classList.add('wait')
-		setTimeout(() => {
-			element.classList.remove('wait')
-		}, 1000);
-	})
-}
 
 
 

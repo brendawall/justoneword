@@ -73,25 +73,40 @@
 .raw > .listen {
     height: 7.5%;
     display: flex;
-    gap: 1rem;
+    gap: 4rem;
+    width: 100%;
     align-items: center;
 }
 
-.listen > button {
-    all: unset;
-    color: black;
+.text {display: flex; gap: .75rem;}
+
+.listen > .text > span {
+    font-weight: 500;
     font-size: 2.5rem;
     cursor: pointer;
 }
 
-.listen > svg {
-    height: 2.5rem; 
-    transform: translateY(.25rem);
+.listen-controls {display: flex; gap: 1rem;}
+
+.listen-controls > button {
+    background: transparent;
+    outline: none;
+    border: none;
+}
+
+.listen-controls > button > img {
+    height: 2rem;
+}
+
+.listen > .text > img {
+    height: 2.125rem; 
+    transform: translateY(.3rem);
 }
 
 .timeline {
     -webkit-appearance: none;
     width: 15rem;
+    margin-top: -.3rem;
     background: transparent;
 }
 
@@ -335,6 +350,7 @@
 @media (max-width: 1350px) {
     .raw > .word > h1 {font-size: 8rem;}
     .insight-panel > .generated {width: 50%}
+    .timeline {width: 100%;}
 }
 
 @media (max-width: 1050px) {
