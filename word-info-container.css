@@ -91,6 +91,13 @@
     border: none;
 }
 
+.auto-scroll {
+    filter: brightness(0.8); 
+    transition: filter 500ms ease;
+    mix-blend-mode: hard-light;
+}
+.auto-scroll.active {filter: brightness(0); mix-blend-mode: normal;}
+
 .listen-controls {display: flex; gap: 1rem;}
 
 .listen-controls > button {
@@ -151,6 +158,7 @@
 .raw > .par {
     height: 75%;
     overflow: auto;
+    scroll-behavior: smooth;
     font-size: var(--font-size-small);
 }
 

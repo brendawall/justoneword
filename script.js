@@ -510,6 +510,27 @@ function fileExists(url, callback) {
 	xhr.send();
 }
 
+function autoScroll(scrollContainer, scrollHeight) {
+	let scrollInterval;
+	const autoScroll = document.querySelector('.auto-scroll');
+	autoScroll.addEventListener("click", () => {
+		autoScroll.classList.toggle('active')
+		if(autoScroll.classList.contains('active')) {
+			const audioDuration = audio.duration;
+			const offsetTime = audioDuration * 0.2;
+				setTimeout(() => {
+						scrollInterval = setInterval(() => {
+							let currentTimePercent = ((audio.currentTime - offsetTime) / audioDuration) * scrollHeight;
+							scrollContainer.scrollTop = currentTimePercent;
+						}, 50);
+				}, audioDuration * 200);
+		} else {
+			scrolling = false
+			clearInterval(scrollInterval)
+		}
+	})
+}
+
 let playing = false;
 let listenCount = 0;
 let intervalID;
@@ -536,6 +557,7 @@ document.body.addEventListener("click", (event) => {
 	const wikiText = document.querySelector('.wiki > .info-text');
 	const continueReading = document.querySelector('.continue-reading');
 	const wikiBackground = document.querySelector('.bg-blur');
+	const autoScrollContainer = document.querySelector('.auto-scroll');
 
     if (event.target.matches('#word')) {
 		let object;
@@ -568,6 +590,7 @@ document.body.addEventListener("click", (event) => {
 		listenButtonImage.src = './icons/play.svg'
 		listenControls.classList.add('hidden')
 		backgroundOverlay.classList.add('hidden');
+		autoScrollContainer.classList.remove('active')
 		listenCount = 0;
 		audio.remove();
 	})
@@ -647,6 +670,7 @@ document.body.addEventListener("click", (event) => {
 		audio.play();
 		clearInterval(intervalID)
 		audioRangeInterval(audio)
+		autoScroll(paragraph, paragraph.scrollHeight)
 		listenButtonImage.src = './icons/pause.svg'
 	} else if (event.target.matches('#listen-button')) {
 		listenCount++
@@ -654,6 +678,7 @@ document.body.addEventListener("click", (event) => {
 			clearInterval(intervalID)
 			audio.play();
 			audioRangeInterval(audio)
+			autoScroll(paragraph, paragraph.scrollHeight)
 			listenButtonImage.src = './icons/pause.svg'
 		}
 		else {
@@ -670,33 +695,6 @@ audioRange.addEventListener("input", () => {
 	audio.currentTime = (audioRange.value / audioRange.max) * audio.duration;
 	audioRangeInterval(audio);
 })
-
-// Auto Scroll
-let scrollInterval;
-let scrollInc = 0;
-const autoScroll = document.querySelector('.auto-scroll');
-autoScroll.addEventListener("click", () => {
-	autoScroll.classList.toggle('active')
-	if(autoScroll.classList.contains('active')) {
-		const audioDuration = audio.duration;
-		const scrollHeight = paragraph.scrollHeight;
-		console.log(audioDuration, scrollHeight)
-		scrollInterval = setInterval(() => {
-			scrollInc+=100
-			console.log(scrollInc)
-			let currentTimePercent = (audio.currentTime / audioDuration) * scrollHeight;
-			paragraph.scrollTop = scrollInc;
-		}, 2000);
-	} else {
-		scrolling = false
-		clearInterval(scrollInterval)
-	}
-})
-
-setTimeout(() => {
-	paragraph.scrollTop = 200;
-	console.log('par')
-}, 10000);
 
 
 
