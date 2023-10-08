@@ -419,6 +419,7 @@ function renderTextFile(fileName, destination) {
 	  .then((fileContent) => {
 		// Update the textContent of the destination DOM element
 		destination.textContent = fileContent;
+		destination.scrollTop = 0;
 	  })
 	  .catch((error) => {
 		console.error('Error fetching the text file:', error);
@@ -471,6 +472,8 @@ function wrapStringWithSpan(paragraphClass, searchString) {
 
 const audioRange = document.querySelector(".listen > .listen-controls > input");
 
+let scrolling = false;
+
 function audioRangeInterval(audio) {
 	setTimeout(() => {
 		audio.play();
@@ -492,17 +495,35 @@ function pause(audio, svg) {
 	listenCount++
 }
 
+function fileExists(url, callback) {
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+	  if (xhr.readyState === 4) {
+		if (xhr.status === 200) {
+		  callback(true); // File exists
+		} else {
+		  callback(false); // File does not exist or there was an error
+		}
+	  }
+	};
+	xhr.open('HEAD', url, true);
+	xhr.send();
+}
 
+let playing = false;
 let listenCount = 0;
 let intervalID;
+const audio = document.createElement("audio");
 
 document.body.addEventListener("click", (event) => {
 	const raw = document.querySelector('.raw');
 	const generated = document.querySelector('.generated');
 	const title = document.querySelector('.title-of-word');
+	const listenContainer = document.querySelector('.listen')
 	const listenInitial = document.querySelector('.listen > .text');
 	const listenButton = document.querySelector('.listen > .listen-controls > button');
 	const listenButtonImage = document.querySelector('.listen > .listen-controls > button > img')
+	const listenControls = document.querySelector('.listen > .listen-controls')
 	const paragraph = document.querySelector('.par');
 	const bible = document.querySelector('.bible');
 	const bibleTranslation = document.querySelector('.translation');
@@ -523,33 +544,17 @@ document.body.addEventListener("click", (event) => {
 		} else {
 			object = event.target.parentElement
 		}
-
-	// Listen Logic
-	const audio = document.createElement("audio");
-
-	listenInitial.addEventListener("click", () => {
-		listenButton.parentElement.classList.remove('hidden');
-		play(audio, listenButtonImage)
-	})
+	fileExists(`./audio-exports/${object.ariaLabel}.mp3`, function(exists) {
+		if(exists) {
+			audio.src = `./audio-exports/${object.ariaLabel}.mp3`
+			listenContainer.classList.remove('hidden')
+		}
+		else {
+			listenContainer.classList.add('hidden')
+		}
+	});
 
 	audio.src = `./audio-exports/${object.ariaLabel}.mp3`
-	console.log(object.ariaLabel)
-
-	listenButton.addEventListener("click", () => {
-		console.log(listenCount)
-		if(listenCount % 2 == 0) {
-			play(audio, listenButtonImage)
-		} else if (listenCount == 2 || listenCount % 2 == 1) {
-			pause(audio, listenButtonImage)
-		}
-	})
-
-	audioRange.addEventListener("input", () => {
-		audio.pause();
-		clearInterval(intervalID)
-		audio.currentTime = (audioRange.value / audioRange.max) * audio.duration;
-		audioRangeInterval(audio);
-	})
 
 	const wordInsightPanel = document.querySelector('.insight-panel');
 	const backgroundOverlay = document.querySelector('.background-overlay');
@@ -560,6 +565,8 @@ document.body.addEventListener("click", (event) => {
 		audio.src = ''
 		wordInsightPanel.classList.add('hidden');
 		bible.classList.add('hidden')
+		listenButtonImage.src = './icons/play.svg'
+		listenControls.classList.add('hidden')
 		backgroundOverlay.classList.add('hidden');
 		listenCount = 0;
 		audio.remove();
@@ -581,8 +588,10 @@ document.body.addEventListener("click", (event) => {
 		const bibleReferences = document.querySelectorAll('.bible-reference');
 		bibleReferences.forEach(reference => {
 			reference.addEventListener("click", () => {
+				setTimeout(() => {
+					wordInsightPanel.scrollTop = wordInsightPanel.scrollHeight;
+				}, 500);
 				bible.classList.remove('hidden')
-
 				urlFormat = String(reference.ariaLabel).replace(/:\d+/g, '');
 				readFull.href = `https://www.biblegateway.com/passage/?search=${urlFormat}&version=NRSV`;
 				readFull.target = '_blank'
@@ -633,8 +642,62 @@ document.body.addEventListener("click", (event) => {
 			}
 		}
 	}, 500);
+	} else if (event.target.matches('#initial-listen')) {
+		listenControls.classList.remove('hidden')
+		audio.play();
+		clearInterval(intervalID)
+		audioRangeInterval(audio)
+		listenButtonImage.src = './icons/pause.svg'
+	} else if (event.target.matches('#listen-button')) {
+		listenCount++
+		if(listenCount % 2 == 0) {
+			clearInterval(intervalID)
+			audio.play();
+			audioRangeInterval(audio)
+			listenButtonImage.src = './icons/pause.svg'
+		}
+		else {
+			audio.pause();
+			clearInterval(intervalID)
+			listenButtonImage.src = './icons/play.svg'
+		}
 	}
 });
+
+audioRange.addEventListener("input", () => {
+	audio.pause();
+	clearInterval(intervalID)
+	audio.currentTime = (audioRange.value / audioRange.max) * audio.duration;
+	audioRangeInterval(audio);
+})
+
+// Auto Scroll
+let scrollInterval;
+let scrollInc = 0;
+const autoScroll = document.querySelector('.auto-scroll');
+autoScroll.addEventListener("click", () => {
+	autoScroll.classList.toggle('active')
+	if(autoScroll.classList.contains('active')) {
+		const audioDuration = audio.duration;
+		const scrollHeight = paragraph.scrollHeight;
+		console.log(audioDuration, scrollHeight)
+		scrollInterval = setInterval(() => {
+			scrollInc+=100
+			console.log(scrollInc)
+			let currentTimePercent = (audio.currentTime / audioDuration) * scrollHeight;
+			paragraph.scrollTop = scrollInc;
+		}, 2000);
+	} else {
+		scrolling = false
+		clearInterval(scrollInterval)
+	}
+})
+
+setTimeout(() => {
+	paragraph.scrollTop = 200;
+	console.log('par')
+}, 10000);
+
 
 
 

@@ -80,10 +80,15 @@
 
 .text {display: flex; gap: .75rem;}
 
-.listen > .text > span {
+.listen > .text > button {
+    display: flex;
+    align-items: center;
+    gap: .3em;
     font-weight: 500;
     font-size: 2.5rem;
     cursor: pointer;
+    background: transparent;
+    border: none;
 }
 
 .listen-controls {display: flex; gap: 1rem;}
@@ -449,6 +454,7 @@
 }
 
 @media (max-width: 500px) {
+    .raw > .listen {flex-direction: column; gap: 1.5rem; height: fit-content;}
     .raw > .listen {gap: .5rem}
     .raw > .listen > button {font-size: 2rem;}
     .raw > .listen > svg {width: 2em;}

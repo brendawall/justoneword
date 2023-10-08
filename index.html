@@ -53,15 +53,20 @@
                 <h1 class="title-of-word"></h1>
             </div>
             <div class="listen">
-                <div class="text">
-                    <span>Listen</span> 
-                    <img id="listen-button" src="./icons/volume.svg" alt="Speaker Icon">
+                <div class="text id="initial-listen">
+                    <button id="initial-listen">
+                        Listen
+                        <img src="./icons/volume.svg" alt="Speaker Icon">
+                    </button> 
                 </div>
                 <div class="listen-controls hidden">
                     <button>
                         <img id="listen-button" src="./icons/play.svg" alt="Speaker Icon">
                     </button>
                     <input class="timeline" type="range" name="timeline" max="10000" value="0">
+                    <button class="auto-scroll">
+                        <img src="./icons/auto-scroll.svg" alt="Auto Scrolling">
+                    </button>
                 </div>
             </div>
             <div class="par auto-fit scroll-container needs-buffer" style="white-space: pre-line;">
@@ -72,7 +77,7 @@
                 <div class="translation"></div>
                 <div class="verse"></div>
                 <div class="text auto-fit"></div>
-                <a href="#" class="read-full">Read Full Chapter</a>
+                <a href="#" class="read-full">Read Full Chapter (NRSV)</a>
             </div>
             <div class="wiki hidden" id="wiki">
                 <div class="title"></div>
