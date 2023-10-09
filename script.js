@@ -321,6 +321,7 @@ function listMode() {
 }
 
 const listButton = document.querySelector('.words-viewing-mode');
+const autoScrollCaption = document.querySelector('.caption');
 listButton.addEventListener("click", () => {listMode();})
 
 function maxWidth(maxClientWidth) {
@@ -358,6 +359,10 @@ if(maxWidth(800)) {
 	paragraph.addEventListener("click", () => {
 		paragraph.classList.toggle('expanded')
 	})
+	autoScrollCaption.src = './icons/caption-mobile.png';
+	autoScrollCaption.classList.add('mobile-position')
+	// autoScrollCaption.style.bottom = '-160%';
+	// autoScrollCaption.style.left = ' -290%';
 }
 
 function minmax(inputValue, sourceMin, sourceMax, targetMin, targetMax) {
@@ -619,8 +624,8 @@ document.body.addEventListener("click", (event) => {
 		autoScrollContainer.classList.remove('active')
 		listenCount = 0;
 		audio.remove();
-		if(autoScrollContainer.classList.contains('hidden') == false) {
-			autoScrollContainer.classList.add('hidden')
+		if(autoScrollCaption.classList.contains('hidden') == false) {
+			autoScrollCaption.classList.add('hidden')
 		}
 		removeEventListeners(autoScrollContainer);
 	})

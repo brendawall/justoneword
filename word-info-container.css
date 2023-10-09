@@ -106,6 +106,13 @@
     height: 200%;
 }
 
+.caption.mobile-position {
+    top: auto;
+    right: auto;
+    bottom: -160%;
+    left: -290%;
+}
+
 .auto-scroll.active > img:first-child {filter: brightness(0); mix-blend-mode: normal;}
 
 .listen-controls {display: flex; gap: 1rem;}
