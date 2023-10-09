@@ -512,13 +512,30 @@ function fileExists(url, callback) {
 
 function autoScroll(scrollContainer, scrollHeight) {
 	let scrollInterval;
+}
+
+let scrollInterval;
+let captionCount = 0;
+
+function autoScroll(scrollContainer, scrollHeight, captionCounter) {
 	const autoScroll = document.querySelector('.auto-scroll');
 	autoScroll.addEventListener("click", () => {
+		console.log(captionCounter)
+		scrolling = true;
 		autoScroll.classList.toggle('active')
-		if(autoScroll.classList.contains('active')) {
+		if(captionCount == 1) {
+			let caption = document.querySelector('.caption');
+			caption.classList.remove('hidden')
+			setTimeout(() => {
+				caption.classList.add('hidden')
+			}, 5000);
+		}
+		if(autoScroll.classList.contains('active') && scrolling) {
+			console.log('auto scrolling')
 			const audioDuration = audio.duration;
 			const offsetTime = audioDuration * 0.2;
 				setTimeout(() => {
+						console.log('timeout ended')
 						scrollInterval = setInterval(() => {
 							let currentTimePercent = ((audio.currentTime - offsetTime) / audioDuration) * scrollHeight;
 							scrollContainer.scrollTop = currentTimePercent;
@@ -526,13 +543,15 @@ function autoScroll(scrollContainer, scrollHeight) {
 				}, audioDuration * 200);
 		} else {
 			scrolling = false
+			console.log('clearing interval')
 			clearInterval(scrollInterval)
 		}
 	})
+	return scrollInterval;
 }
 
 let playing = false;
-let listenCount = 0;
+let listenCount = 1;
 let intervalID;
 const audio = document.createElement("audio");
 
@@ -593,6 +612,10 @@ document.body.addEventListener("click", (event) => {
 		autoScrollContainer.classList.remove('active')
 		listenCount = 0;
 		audio.remove();
+		if(autoScrollContainer.classList.contains('hidden') == false) {
+			autoScrollContainer.classList.add('hidden')
+		}
+		removeEventListeners(autoScrollContainer);
 	})
 
 	let label = object.ariaLabel;
@@ -665,24 +688,28 @@ document.body.addEventListener("click", (event) => {
 			}
 		}
 	}, 500);
+
+	autoScroll(paragraph, paragraph.scrollHeight, captionCount);
+
 	} else if (event.target.matches('#initial-listen')) {
+		captionCount++
 		listenControls.classList.remove('hidden')
 		audio.play();
 		clearInterval(intervalID)
 		audioRangeInterval(audio)
-		autoScroll(paragraph, paragraph.scrollHeight)
 		listenButtonImage.src = './icons/pause.svg'
 	} else if (event.target.matches('#listen-button')) {
+		captionCount++
 		listenCount++
 		if(listenCount % 2 == 0) {
 			clearInterval(intervalID)
 			audio.play();
 			audioRangeInterval(audio)
-			autoScroll(paragraph, paragraph.scrollHeight)
 			listenButtonImage.src = './icons/pause.svg'
 		}
 		else {
 			audio.pause();
+			scrolling = false;
 			clearInterval(intervalID)
 			listenButtonImage.src = './icons/play.svg'
 		}

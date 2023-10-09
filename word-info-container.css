@@ -91,12 +91,22 @@
     border: none;
 }
 
-.auto-scroll {
+.auto-scroll {position: relative;}
+
+.auto-scroll > img:first-child {
     filter: brightness(0.8); 
     transition: filter 500ms ease;
     mix-blend-mode: hard-light;
 }
-.auto-scroll.active {filter: brightness(0); mix-blend-mode: normal;}
+
+.caption {
+    position: absolute;
+    top: -160%;
+    right: -275%;
+    height: 200%;
+}
+
+.auto-scroll.active > img:first-child {filter: brightness(0); mix-blend-mode: normal;}
 
 .listen-controls {display: flex; gap: 1rem;}
 
@@ -106,7 +116,7 @@
     border: none;
 }
 
-.listen-controls > button > img {
+.listen-controls > button > img:not(.caption) {
     height: 2rem;
 }
 
