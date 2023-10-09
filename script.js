@@ -510,8 +510,15 @@ function fileExists(url, callback) {
 	xhr.send();
 }
 
-function autoScroll(scrollContainer, scrollHeight) {
-	let scrollInterval;
+function removeEventListeners(element) {
+	// Clone the element to remove its listeners without affecting its other properties
+	const clonedElement = element.cloneNode(true);
+  
+	// Replace the original element with the cloned element
+	element.parentNode.replaceChild(clonedElement, element);
+  
+	// Return the cloned element (optional)
+	return clonedElement;
 }
 
 let scrollInterval;
