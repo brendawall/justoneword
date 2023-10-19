@@ -361,8 +361,6 @@ if(maxWidth(800)) {
 	})
 	autoScrollCaption.src = './icons/caption-mobile.png';
 	autoScrollCaption.classList.add('mobile-position')
-	// autoScrollCaption.style.bottom = '-160%';
-	// autoScrollCaption.style.left = ' -290%';
 }
 
 function minmax(inputValue, sourceMin, sourceMax, targetMin, targetMax) {
@@ -546,13 +544,20 @@ function autoScroll(scrollContainer, scrollHeight, captionCounter) {
 			console.log('auto scrolling')
 			const audioDuration = audio.duration;
 			const offsetTime = audioDuration * 0.2;
-				setTimeout(() => {
-						console.log('timeout ended')
+				let autoScrollTimeout = setTimeout(() => {
 						scrollInterval = setInterval(() => {
 							let currentTimePercent = ((audio.currentTime - offsetTime) / audioDuration) * scrollHeight;
 							scrollContainer.scrollTop = currentTimePercent;
 						}, 50);
 				}, audioDuration * 200);
+				audioRange.addEventListener("input", () => {
+					clearTimeout(autoScrollTimeout);
+					setInterval(() => {
+						let currentTimePercent = (audio.currentTime / audioDuration) * scrollHeight;
+						scrollContainer.scrollTop = currentTimePercent;
+						console.log(currentTimePercent, audio.currentTime, scrollContainer.scrollTop)
+					}, 50);
+				})
 		} else {
 			scrolling = false
 			console.log('clearing interval')
