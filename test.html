@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Circle Divs Animation</title>
+  <style>
+    #containerOne, #containerTwo {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <div id="containerOne"></div>
+  <div id="containerTwo"></div>
+
+  <script>
+    var containerOne = document.getElementById('containerOne');
+    generateDivs(15, 100, containerOne, 0.5);
+    var containerTwo = document.getElementById('containerTwo');
+    generateDivs(15, 50, containerTwo, 1);
+
+    function generateDivs(numberOfDivs, circleRadius, container, rotationSpeed) {
+      var angle = 360 / numberOfDivs; // Angle between each div
+      var rotationAngle = 0; // Initial rotation angle
+
+      for (var i = 0; i < numberOfDivs; i++) {
+        var div = document.createElement('div');
+        container.appendChild(div);
+      }
+
+      function animateDivs() {
+        rotationAngle += rotationSpeed; // Update the rotation angle
+
+        for (var i = 0; i < numberOfDivs; i++) {
+          var div = container.children[i]; // Get the div element
+          var divAngle = angle * i + rotationAngle; // Calculate the individual div angle
+
+          var x = Math.cos((divAngle) * (Math.PI / 180)) * circleRadius;
+          var y = Math.sin((divAngle) * (Math.PI / 180)) * circleRadius;
+
+          if (div) {
+            div.style.position = 'absolute';
+            div.style.left = (container.offsetWidth / 2 + x) + 'px';
+            div.style.top = (container.offsetHeight / 2 + y) + 'px';
+            div.style.width = '5px';
+            div.style.height = '5px';
+            div.style.backgroundColor = 'blue';
+          }
+        }
+
+        requestAnimationFrame(animateDivs); // Call the function again for smooth animation
+      }
+
+      animateDivs(); // Start the animation
+    }
+  </script>
+</body>
+</html>
