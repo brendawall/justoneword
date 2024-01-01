@@ -81,10 +81,12 @@ const wordArray = [
 	{word: 'Commandment', file: 'commandment'},
 	{word: 'Confess', file: 'confess'},
 	{word: 'Divided', file: 'divided'},
+	{word: 'Disobedience', file: 'disobedience'},
 	{word: 'Door', file: 'door'},
 	{word: 'Ecstasy', file: 'ecstasy'},
 	{word: 'Electricity', file: 'electricity'},
 	{word: 'Eucharist', file: 'eucharist'},
+	{word: 'Humiliation', file: 'humiliation'},
 	{word: 'Fullness', file: 'fullness'},
 	{word: 'Gift', file: 'gift'},
 	{word: 'Gobsmacked', file: 'gobsmacked'},
@@ -92,6 +94,7 @@ const wordArray = [
 	{word: 'Home 1', file: 'home-1'},
 	{word: 'Home 2', file: 'home-2'},
 	{word: 'Home 3', file: 'home-3'},
+	{word: 'Known', file: 'known'},
 	{word: 'Listen', file: 'listen'},
 	{word: 'Lo and Behold', file: 'lo-behold'},
 	{word: 'Manifest', file: 'manifest'},
@@ -105,7 +108,21 @@ const wordArray = [
 	{word: 'Sin', file: 'sin'},
 	{word: 'Star', file: 'star'},
 	{word: 'Time', file: 'time'},
-	{word: 'Veil', file: 'veil'}
+	{word: 'Veil', file: 'veil'},
+	{word: 'When', file: 'when'},
+	{word: 'Religion', file: 'religion'},
+	{word: 'Temptation', file: 'temptation'},
+	{word: 'Priest', file: 'priest'},
+	{word: 'Author', file: 'author'},
+	{word: 'Cleanse', file: 'cleanse'},
+	{word: 'Abide', file: 'abide'},
+	{word: 'Stigma', file: 'stigma'},
+	{word: 'Holy', file: 'holy'},
+	{word: 'Righteous', file: 'righteous'},
+	{word: 'Sanctification', file: 'sanctification'},
+	{word: 'Testimony', file: 'testimony'},
+	{word: 'Mission', file: 'mission'},
+	{word: 'Messiah', file: 'messiah'}
 ]
 
 const randomWordSpan = document.querySelector('section.random-word-section > span')
@@ -739,28 +756,3 @@ audioRange.addEventListener("input", () => {
 	audio.currentTime = (audioRange.value / audioRange.max) * audio.duration;
 	audioRangeInterval(audio);
 })
-
-
-
-
-
-
-
-
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-
-
-
-
-  
-  
-  
