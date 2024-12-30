@@ -122,8 +122,15 @@ const wordArray = [
 	{word: 'Sanctification', file: 'sanctification'},
 	{word: 'Testimony', file: 'testimony'},
 	{word: 'Mission', file: 'mission'},
-	{word: 'Messiah', file: 'messiah'}
-]
+	{word: 'Messiah', file: 'messiah'},
+	{word: 'Gospel 1', file: 'gospel'},
+	{word: 'Word 1', file: 'word-1'},
+	{word: 'Gospel 2', file: 'gospel-2'},
+	{word: 'Confession', file: 'confession'},
+	{word: 'Up', file: 'up'},
+	{word: 'Will', file: 'will'},
+	{word: 'Perfect', file: 'perfect'},
+].sort((a, b) => a.word.localeCompare(b.word))
 
 const randomWordSpan = document.querySelector('section.random-word-section > span')
 
@@ -171,112 +178,169 @@ randomWordSection();
 
 setInterval(() => {randomWordSection();}, 9000);
 
+// Buttons for controlling rotation speed
 const lessSpeed = document.querySelector('button.less-speed');
 const moreSpeed = document.querySelector('button.more-speed');
 
+// Initialize rotation speed
+let speedOfRotation = 1.25;
+const maxSpeed = 4;
+const minSpeed = 0;
+
+// Event listeners for controlling speed
 lessSpeed.addEventListener("click", () => {
-	speedOfRotation -= 0.5;
-	if(speedOfRotation < 0) {
-		speedOfRotation = 0;
-	}
-	lessSpeed.style.transform = 'scale(1.2)'
-	setTimeout(() => {lessSpeed.style.transform = 'scale(1)'}, 100);
+    speedOfRotation = Math.max(speedOfRotation - 0.5, minSpeed);
+    lessSpeed.style.transform = 'scale(1.2)';
+    setTimeout(() => { lessSpeed.style.transform = 'scale(1)' }, 100);
 });
 
 moreSpeed.addEventListener("click", () => {
-	speedOfRotation += 0.5;
-	if(speedOfRotation > 4) {
-		speedOfRotation = 4;
-	}
-	moreSpeed.style.transform = 'scale(1.2)'
-	setTimeout(() => {moreSpeed.style.transform = 'scale(1)'}, 100);
+    speedOfRotation = Math.min(speedOfRotation + 0.5, maxSpeed);
+    moreSpeed.style.transform = 'scale(1.2)';
+    setTimeout(() => { moreSpeed.style.transform = 'scale(1)' }, 100);
 });
 
-var speedOfRotation = 1.25;
-var minFontSize = 1.25;
-var maxFontSize = 1.85;
+// Function to divide words based on length
+function divideWords(wordArray, threshold) {
+    console.log("divideWords function called");
+    console.log("Received wordArray:", wordArray);
+    console.log("Threshold for division:", threshold);
 
-var animationData = { requestId: null }; // Object to store the request ID
-var viewingMode = true; // Initial viewing mode
+    const shorterWords = [];
+    const longerWords = [];
 
-function generateDivs(numberOfDivs, circleRadius, container, rotationSpeed) {
-  var angle = 360 / numberOfDivs; // Angle between each div
-  var rotationAngle = 0; // Initial rotation angle
+    wordArray.forEach((wordObj, index) => {
+        console.log(`Processing word object at index ${index}:`, wordObj);
 
-  for (var i = 0; i < numberOfDivs; i++) {
-    var div = document.createElement('div');
-    container.appendChild(div);
-  }
+        const word = wordObj.word; // Accessing the `word` property
+        console.log(`Extracted word: "${word}"`);
 
-  function animateDivs() {
-    rotationAngle += rotationSpeed * speedOfRotation; // Update the rotation angle
+        if (word.length <= threshold) {
+            console.log(`Word "${word}" is shorter or equal to the threshold (${threshold})`);
+            shorterWords.push(wordObj);
+        } else {
+            console.log(`Word "${word}" is longer than the threshold (${threshold})`);
+            longerWords.push(wordObj);
+        }
+    });
 
-    for (var i = 0; i < numberOfDivs; i++) {
-      var div = container.children[i]; // Get the div element
-      var divAngle = angle * i + rotationAngle; // Calculate the individual div angle
+    console.log("Final shorterWords array:", shorterWords);
+    console.log("Final longerWords array:", longerWords);
 
-      var x = Math.cos((divAngle) * (Math.PI / 180)) * circleRadius;
-      var y = Math.sin((divAngle) * (Math.PI / 180)) * circleRadius * 0.6;
+    return { shorterWords, longerWords };
+}
 
-      if (div) {
-        div.style.left = (container.offsetWidth / 2 + x) + 'px';
-        div.style.top = (container.offsetHeight / 2 + y) + 'px';
-        div.classList.add('word');
-        div.classList.add('spin-mode');
-      }
+// Function to generate spinning divs
+function generateDivs(words, circleRadius, container, rotationSpeed, viewingMode) {
+    const angleStep = 360 / words.length;
+    let rotationAngle = 0;
+    let intervalId;
+
+    // Create and position divs
+    words.forEach((word, i) => {
+        const div = document.createElement('div');
+        div.className = 'word spin-mode';
+        div.setAttribute('aria-label', word);
+
+        const span = document.createElement('span');
+        span.id = 'word';
+        span.style.opacity = Math.random().toFixed(2); // Example opacity logic
+        span.style.fontSize = `${Math.random() * (1.85 - 1.25) + 1.25}rem`; // Randomized font size
+        span.textContent = word.word; // Properly set word text
+
+        div.appendChild(span);
+        container.appendChild(div);
+
+        const angle = angleStep * i;
+        const x = Math.cos(angle * (Math.PI / 180)) * circleRadius;
+        const y = Math.sin(angle * (Math.PI / 180)) * circleRadius * 0.6;
+
+        div.style.transform = `translate(calc(${container.offsetWidth / 2 + x}px - 50%), calc(${container.offsetHeight / 2 + y}px - 50%))`;
+    });
+
+    // Animation loop
+    function animateDivs() {
+        rotationAngle += rotationSpeed;
+        words.forEach((_, i) => {
+            const div = container.children[i];
+            const angle = angleStep * i + rotationAngle;
+            const x = Math.cos(angle * (Math.PI / 180)) * circleRadius;
+            const y = Math.sin(angle * (Math.PI / 180)) * circleRadius * 0.6;
+
+            div.style.transform = `translate(calc(${container.offsetWidth / 2 + x}px - 50%), calc(${container.offsetHeight / 2 + y}px - 50%))`;
+        });
     }
 
     if (viewingMode) {
-      animationData.requestId = requestAnimationFrame(animateDivs);
+        intervalId = setInterval(animateDivs, 100);
     }
-  }
 
-  animationData.requestId = requestAnimationFrame(animateDivs); // Start the animation
-
-  return function cancelAnimation() {
-    cancelAnimationFrame(animationData.requestId);
-  };
+    return () => clearInterval(intervalId);
 }
 
+// DOM Elements for containers
 const largerSpinner = document.querySelector('section.words > .spin-container-one');
 const smallerSpinner = document.querySelector('section.words > .spin-container-two');
+const threshold = 6; // Character length threshold
 
-var cancelAnimations = [];
-
-var cancelAnimation1 = generateDivs(Math.round(wordArray.length * 0.6), largerSpinner.clientWidth / 2.25, largerSpinner, 0.05);
-cancelAnimations.push(cancelAnimation1);
-
-var cancelAnimation2 = generateDivs(Math.round(wordArray.length * 0.4), smallerSpinner.clientWidth / 2.25, smallerSpinner, 0.1);
-cancelAnimations.push(cancelAnimation2);
-
-function appendRandomWord() {
-	const largerSpinnerItems = document.querySelectorAll('section.words > .spin-container-one > div');
-	const smallerSpinnerItems = document.querySelectorAll('section.words > .spin-container-two > div');
-	const jumbledWords = [...wordArray].sort(() => 0.5 - Math.random());
-	const spinnerItems = [];
-	var spinnerItemsLength = largerSpinnerItems.length + smallerSpinnerItems.length;
-	jumbledWords.forEach(function(word, index) {
-
-		const newWordItem = document.createElement("span");
-		newWordItem.setAttribute("id", "word")
-
-		if (index < largerSpinnerItems.length) {
-			newWordItem.style.opacity = Math.random() / 2 + 0.6;
-			newWordItem.textContent = word.word;
-			newWordItem.style.fontSize = Math.random() * (maxFontSize - minFontSize) + minFontSize + 'rem';
-			largerSpinnerItems[index].appendChild(newWordItem);
-		}
-		else {
-			newWordItem.style.opacity = Math.random() / 3 + 0.6;
-			newWordItem.textContent = word.word;
-			newWordItem.style.fontSize = Math.random() * (maxFontSize - minFontSize) + minFontSize + 'rem';
-			smallerSpinnerItems[index - largerSpinnerItems.length].appendChild(newWordItem);
-		}
-
-		newWordItem.parentElement.ariaLabel = jumbledWords[index].file;
-	});
+function clearContainer(container) {
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
 }
-appendRandomWord();
+
+// Updated divideWords function remains unchanged
+clearContainer(largerSpinner);
+clearContainer(smallerSpinner);
+
+const { shorterWords, longerWords } = divideWords(wordArray, threshold);
+
+// Generate initial divs for each container
+// Generate initial divs for each container
+const cancelAnimations = [
+    generateDivs(shorterWords, smallerSpinner.clientWidth / 2.25, smallerSpinner, 4, viewingMode), // Shorter words in smallerSpinner
+    generateDivs(longerWords, largerSpinner.clientWidth / 2.25, largerSpinner, 2, viewingMode) // Longer words in largerSpinner
+];
+
+function appendWords() {
+    const largerSpinnerItems = document.querySelectorAll('section.words > .spin-container-one > div');
+    const smallerSpinnerItems = document.querySelectorAll('section.words > .spin-container-two > div');
+    const minFontSize = 1.125;
+    const maxFontSize = 2.5;
+
+    // Clear previous spans
+    largerSpinnerItems.forEach(div => div.innerHTML = '');
+    smallerSpinnerItems.forEach(div => div.innerHTML = '');
+
+    // Append sorted longerWords to largerSpinner
+    longerWords.forEach((wordObj, index) => {
+        if (index < largerSpinnerItems.length) {
+            const newWordItem = document.createElement("span");
+            newWordItem.setAttribute("id", "word");
+            newWordItem.style.opacity = Math.random() / 2 + 0.6;
+            newWordItem.textContent = wordObj.word;
+            newWordItem.style.fontSize = Math.random() * (maxFontSize - minFontSize) + minFontSize + 'rem';
+            largerSpinnerItems[index].appendChild(newWordItem);
+            newWordItem.parentElement.ariaLabel = wordObj.file;
+        }
+    });
+
+    // Append sorted shorterWords to smallerSpinner
+    shorterWords.forEach((wordObj, index) => {
+        if (index < smallerSpinnerItems.length) {
+            const newWordItem = document.createElement("span");
+            newWordItem.setAttribute("id", "word");
+            newWordItem.style.opacity = Math.random() / 3 + 0.6;
+            newWordItem.textContent = wordObj.word;
+            newWordItem.style.fontSize = Math.random() * (maxFontSize - minFontSize) + minFontSize + 'rem';
+            smallerSpinnerItems[index].appendChild(newWordItem);
+            newWordItem.parentElement.ariaLabel = wordObj.file;
+        }
+    });
+}
+
+// Call appendWords after initial setup
+appendWords();
 
 function randomFontSize(min, max, span) {
 	let fontSize = (Math.random() * (max - min) + min);
@@ -590,12 +654,8 @@ let intervalID;
 const audio = document.createElement("audio");
 
 document.body.addEventListener("click", (event) => {
-	const raw = document.querySelector('.raw');
-	const generated = document.querySelector('.generated');
 	const title = document.querySelector('.title-of-word');
 	const listenContainer = document.querySelector('.listen')
-	const listenInitial = document.querySelector('.listen > .text');
-	const listenButton = document.querySelector('.listen > .listen-controls > button');
 	const listenButtonImage = document.querySelector('.listen > .listen-controls > button > img')
 	const listenControls = document.querySelector('.listen > .listen-controls')
 	const paragraph = document.querySelector('.par');
@@ -604,12 +664,6 @@ document.body.addEventListener("click", (event) => {
 	const bibleVerse = document.querySelector('.verse');
 	const bibleText = document.querySelector('.bible > .text');
 	const readFull = document.querySelector('.read-full');
-	const wiki = document.querySelector('.wiki');
-	const wikiTitle = document.querySelector('.wiki > .title');
-	const wikiImage = document.querySelector('.wiki > .image');
-	const wikiText = document.querySelector('.wiki > .info-text');
-	const continueReading = document.querySelector('.continue-reading');
-	const wikiBackground = document.querySelector('.bg-blur');
 	const autoScrollContainer = document.querySelector('.auto-scroll');
 
     if (event.target.matches('#word')) {

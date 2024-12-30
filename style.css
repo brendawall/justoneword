@@ -214,7 +214,7 @@ hr.active {opacity: 1; width: 100%}
     font-size: 1.25rem;
     text-align: center;
     transform: translate(-50%, -50%);
-    transition: all 200ms;
+    transition: all 100ms linear;
 }
 
 .word.spin-mode:hover {
