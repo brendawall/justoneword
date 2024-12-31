@@ -231,7 +231,7 @@ function divideWords(wordArray, threshold) {
 }
 
 // Function to generate spinning divs
-function generateDivs(words, circleRadius, container, rotationSpeed, viewingMode) {
+function generateDivs(words, circleRadius, container, rotationSpeed, viewingMode, speedOfRotation) {
     const angleStep = 360 / words.length;
     let rotationAngle = 0;
     let intervalId;
@@ -245,7 +245,7 @@ function generateDivs(words, circleRadius, container, rotationSpeed, viewingMode
         const span = document.createElement('span');
         span.id = 'word';
         span.style.opacity = Math.random().toFixed(2); // Example opacity logic
-        span.style.fontSize = `${Math.random() * (1.85 - 1.25) + 1.25}rem`; // Randomized font size
+        span.style.fontSize = `${Math.random() * (1.45 - 1.125) + 1.125}rem`; // Randomized font size
         span.textContent = word.word; // Properly set word text
 
         div.appendChild(span);
@@ -260,7 +260,7 @@ function generateDivs(words, circleRadius, container, rotationSpeed, viewingMode
 
     // Animation loop
     function animateDivs() {
-        rotationAngle += rotationSpeed;
+        rotationAngle += (rotationSpeed * speedOfRotation);
         words.forEach((_, i) => {
             const div = container.children[i];
             const angle = angleStep * i + rotationAngle;
@@ -298,15 +298,15 @@ const { shorterWords, longerWords } = divideWords(wordArray, threshold);
 // Generate initial divs for each container
 // Generate initial divs for each container
 const cancelAnimations = [
-    generateDivs(shorterWords, smallerSpinner.clientWidth / 2.25, smallerSpinner, 4, viewingMode), // Shorter words in smallerSpinner
-    generateDivs(longerWords, largerSpinner.clientWidth / 2.25, largerSpinner, 2, viewingMode) // Longer words in largerSpinner
+    generateDivs(shorterWords, smallerSpinner.clientWidth / 2.25, smallerSpinner, 2, viewingMode, speedOfRotation), // Shorter words in smallerSpinner
+    generateDivs(longerWords, largerSpinner.clientWidth / 2.25, largerSpinner, 1, viewingMode, speedOfRotation) // Longer words in largerSpinner
 ];
 
 function appendWords() {
     const largerSpinnerItems = document.querySelectorAll('section.words > .spin-container-one > div');
     const smallerSpinnerItems = document.querySelectorAll('section.words > .spin-container-two > div');
-    const minFontSize = 1.125;
-    const maxFontSize = 2.5;
+    const minFontSize = 1;
+    const maxFontSize = 1.45;
 
     // Clear previous spans
     largerSpinnerItems.forEach(div => div.innerHTML = '');
