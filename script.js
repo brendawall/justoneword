@@ -130,6 +130,7 @@ const wordArray = [
 	{word: 'Up', file: 'up'},
 	{word: 'Will', file: 'will'},
 	{word: 'Perfect', file: 'perfect'},
+	{word: 'Pinnacle', file: 'pinnacle'},
 ].sort((a, b) => a.word.localeCompare(b.word))
 
 const randomWordSpan = document.querySelector('section.random-word-section > span')
