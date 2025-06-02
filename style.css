@@ -66,8 +66,8 @@ audio {display: none}
     height: 20vw;
     mix-blend-mode: multiply;
     object-fit: cover;
-    -webkit-mask-image: url(./icons/logo.svg);
-    mask-image: url(./icons/logo.svg);
+    -webkit-mask-image: url(./icons/Logo.svg);
+    mask-image: url(./icons/Logo.svg);
 
     mask-size: contain;
     mask-position: center center;
